@@ -1,8 +1,0 @@
-{
-	"loading_priority":1,
-	"hidden": true,
-	"type": "origins:attribute_modify_transfer",
-	"class": "modify_damage_dealt",
-	"attribute": "minecraft:generic.movement_speed",
-	"multiplier": 4.0
-}

@@ -1,9 +1,0 @@
-{
-	"hidden": true,
-	"type": "origins:modify_damage_taken",
-	"modifier": {
-		"name": "Origin Physical Resistance",
-		"operation": "multiply_total_multiplicative",
-		"value": -0.1
-	}
-}

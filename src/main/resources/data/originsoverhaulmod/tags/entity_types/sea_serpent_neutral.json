@@ -1,8 +1,0 @@
-{
-	"replace": false,
-	"values": [
-		{"id":"#originsoverhaulmod:siren_neutral","required":false},
-		{"id":"iceandfire:sea_serpent","required":false},
-		{"id":"alexscaves:hullbreaker","required":false}
-	]
-}
