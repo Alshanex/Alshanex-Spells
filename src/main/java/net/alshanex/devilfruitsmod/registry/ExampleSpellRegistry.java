@@ -2,6 +2,8 @@ package net.alshanex.devilfruitsmod.registry;
 
 import io.redspace.ironsspellbooks.IronsSpellbooks;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
+import net.alshanex.devilfruitsmod.spells.HiganSpell;
+import net.alshanex.devilfruitsmod.spells.HikenSpell;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -18,5 +20,8 @@ public class ExampleSpellRegistry {
     private static RegistryObject<AbstractSpell> registerSpell(AbstractSpell spell) {
         return SPELLS.register(spell.getSpellName(), () -> spell);
     }
+
+    public static final RegistryObject<AbstractSpell> HIGAN = registerSpell(new HiganSpell());
+    public static final RegistryObject<AbstractSpell> HIKEN = registerSpell(new HikenSpell());
 
 }
