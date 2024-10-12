@@ -4,17 +4,20 @@ import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.damage.ISSDamageTypes;
 import io.redspace.ironsspellbooks.entity.spells.AoeEntity;
+import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.alshanex.devilfruitsmod.entity.ModEntities;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,13 +33,13 @@ public class HibashiraEntity extends AoeEntity {
         this(ModEntities.HIBASHIRA_ENTITY.get(), level);
     }
 
+    List<Entity> trackingEntities = new ArrayList<>();
+
     @Override
     public void applyEffect(LivingEntity target) {
         if (damageSource == null) {
             damageSource = new DamageSource(DamageSources.getHolderFromResource(target, ISSDamageTypes.FIRE_FIELD), this, getOwner());
         }
-        Vec3 knockbackDirection = target.position().subtract(this.position()).normalize().scale(1);
-        target.setDeltaMovement(target.getDeltaMovement().add(knockbackDirection));
         target.hurt(damageSource, getDamage());
         target.setSecondsOnFire(3);
     }
@@ -60,6 +63,43 @@ public class HibashiraEntity extends AoeEntity {
             this.duration += durationOnUse;
             onPostHit();
         }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        int update = Math.max((int) (getRadius() / 2), 2);
+        if (tickCount % update == 0) {
+            updateTrackingEntities();
+        }
+        var bb = this.getBoundingBox();
+        float radius = (float) (bb.getXsize()) * 2.5f;
+        for (Entity entity : trackingEntities) {
+            if (entity != getOwner() && !DamageSources.isFriendlyFireBetween(getOwner(), entity)) {
+                Vec3 center = new Vec3(bb.getCenter().x, bb.getCenter().y + 7.5f, bb.getCenter().z);
+                float distance = (float) center.distanceTo(entity.position());
+                if (distance > radius) {
+                    continue;
+                }
+                float f = 1 - distance / radius;
+                float scale = f * f * f * f * .25f;
+
+                Vec3 diff = center.subtract(entity.position()).scale(scale);
+                entity.push(diff.x, diff.y, diff.z);
+                entity.fallDistance = 0;
+            }
+        }
+        if (!level().isClientSide) {
+            if ((tickCount - 1) % loopSoundDurationInTicks == 0) {
+                this.playSound(SoundRegistry.FIRE_BREATH_LOOP.get(), getRadius(), 1);
+            }
+        }
+    }
+
+    private static final int loopSoundDurationInTicks = 200;
+
+    private void updateTrackingEntities() {
+        trackingEntities = level().getEntities(this, this.getBoundingBox().inflate(this.getBbWidth() * 3, 15, this.getBbWidth() * 3));
     }
 
     @Override
@@ -88,7 +128,7 @@ public class HibashiraEntity extends AoeEntity {
             return;
 
         getParticle().ifPresent((particle) -> {
-            float f = getParticleCount() * 0.5f;
+            float f = getParticleCount() * 0.3f;
             f = Mth.clamp(f * getRadius(), f / 4, f * 10);
             float angularSpeed = 0.15f;
 

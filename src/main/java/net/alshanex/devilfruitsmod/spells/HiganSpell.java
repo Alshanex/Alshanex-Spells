@@ -39,7 +39,7 @@ public class HiganSpell extends AbstractSpell {
             .setMinRarity(SpellRarity.COMMON)
             .setSchoolResource(SchoolRegistry.FIRE_RESOURCE)
             .setMaxLevel(10)
-            .setCooldownSeconds(20)
+            .setCooldownSeconds(15)
             .build();
 
     public HiganSpell() {
@@ -99,14 +99,14 @@ public class HiganSpell extends AbstractSpell {
         FireboltProjectile firebolt1 = new FireboltProjectile(world, entity);
         firebolt1.setPos(origin.add(rightVector).subtract(0, firebolt1.getBbHeight(), 0));
         firebolt1.shoot(entity.getLookAngle());
-        firebolt1.setDamage(getDamage(spellLevel, entity)/2);
+        firebolt1.setDamage(getDamage(spellLevel, entity));
         world.playSound(null, origin.x, origin.y, origin.z, SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 2.0f, 1.0f);
         world.addFreshEntity(firebolt1);
 
         FireboltProjectile firebolt2 = new FireboltProjectile(world, entity);
         firebolt2.setPos(origin.subtract(rightVector).subtract(0, firebolt2.getBbHeight(), 0));
         firebolt2.shoot(entity.getLookAngle());
-        firebolt2.setDamage(getDamage(spellLevel, entity)/2);
+        firebolt2.setDamage(getDamage(spellLevel, entity));
         world.playSound(null, origin.x, origin.y, origin.z, SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 2.0f, 1.0f);
         world.addFreshEntity(firebolt2);
     }

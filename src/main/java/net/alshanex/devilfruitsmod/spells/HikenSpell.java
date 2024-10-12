@@ -24,7 +24,7 @@ import java.util.Optional;
 @AutoSpellConfig
 
 public class HikenSpell extends AbstractSpell {
-    private final ResourceLocation spellId = new ResourceLocation(IronsSpellbooks.MODID, "hiken_spell");
+    private final ResourceLocation spellId = new ResourceLocation(IronsSpellbooks.MODID, "hiken");
 
     @Override
     public List<MutableComponent> getUniqueInfo(int spellLevel, LivingEntity caster) {
@@ -37,7 +37,7 @@ public class HikenSpell extends AbstractSpell {
             .setMinRarity(SpellRarity.RARE)
             .setSchoolResource(SchoolRegistry.FIRE_RESOURCE)
             .setMaxLevel(5)
-            .setCooldownSeconds(25)
+            .setCooldownSeconds(20)
             .build();
 
     public HikenSpell() {
@@ -80,7 +80,7 @@ public class HikenSpell extends AbstractSpell {
 
         for (int i = 0; i < numberOfEntities; i++) {
             HikenEntity fireball = new HikenEntity(world, entity);
-            fireball.setDamage(getDamage(spellLevel, entity)/3);
+            fireball.setDamage(getDamage(spellLevel, entity));
             fireball.setExplosionRadius(getRadius(spellLevel, entity));
 
             fireball.setPos(origin.add(forward.scale(0.5)).add(right.scale(offset * i)).subtract(0, fireball.getBbHeight() / 2, 0));

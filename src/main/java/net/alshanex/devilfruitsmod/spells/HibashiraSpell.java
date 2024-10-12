@@ -58,7 +58,7 @@ public class HibashiraSpell extends AbstractSpell {
             .setMinRarity(SpellRarity.UNCOMMON)
             .setSchoolResource(SchoolRegistry.FIRE_RESOURCE)
             .setMaxLevel(10)
-            .setCooldownSeconds(12)
+            .setCooldownSeconds(60)
             .build();
 
     public HibashiraSpell() {
@@ -66,7 +66,7 @@ public class HibashiraSpell extends AbstractSpell {
         this.baseSpellPower = 8;
         this.spellPowerPerLevel = 1;
         this.castTime = 20;
-        this.baseManaCost = 50;
+        this.baseManaCost = 100;
 
     }
 
@@ -102,7 +102,7 @@ public class HibashiraSpell extends AbstractSpell {
     public void onCast(Level level, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) {
         if (playerMagicData.getAdditionalCastData() instanceof TargetAreaCastData castData) {
             Vec3 targetArea = castData.getCenter();
-            level.playSound(null, targetArea.x, targetArea.y, targetArea.z, SoundRegistry.FIERY_EXPLOSION.get(), SoundSource.PLAYERS, 2, random.nextIntBetweenInclusive(8, 12) * .1f);
+            level.playSound(null, targetArea.x, targetArea.y, targetArea.z, SoundRegistry.FIRE_CAST.get(), SoundSource.PLAYERS, 2, random.nextIntBetweenInclusive(8, 12) * .1f);
             var radius = castData.getCastingEntity().getRadius();
             var radiusSqr = radius * radius;
             var damage = getDamage(spellLevel, entity);
