@@ -2,6 +2,7 @@ package net.alshanex.devilfruitsmod.registry;
 
 import io.redspace.ironsspellbooks.IronsSpellbooks;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
+import net.alshanex.devilfruitsmod.spells.HibashiraSpell;
 import net.alshanex.devilfruitsmod.spells.HiganSpell;
 import net.alshanex.devilfruitsmod.spells.HikenSpell;
 import net.minecraft.core.Registry;
@@ -23,5 +24,6 @@ public class ExampleSpellRegistry {
 
     public static final RegistryObject<AbstractSpell> HIGAN = registerSpell(new HiganSpell());
     public static final RegistryObject<AbstractSpell> HIKEN = registerSpell(new HikenSpell());
+    public static final RegistryObject<AbstractSpell> HIBASHIRA = registerSpell(new HibashiraSpell());
 
 }

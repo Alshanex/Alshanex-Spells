@@ -1,6 +1,5 @@
 package net.alshanex.devilfruitsmod.setup;
 
-import io.redspace.ironsspellbooks.entity.spells.fireball.FireballRenderer;
 import net.alshanex.devilfruitsmod.DevilFruitsMod;
 import net.alshanex.devilfruitsmod.entity.ModEntities;
 import net.alshanex.devilfruitsmod.entity.custom.HikenEntityRenderer;
@@ -14,5 +13,6 @@ public class ClientSetup {
     @SubscribeEvent
     public static void rendererRegister(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.HIKEN_ENTITY.get(), (context) -> new HikenEntityRenderer(context, 2f));
+        event.registerEntityRenderer(ModEntities.HIBASHIRA_ENTITY.get(), (context) -> new HikenEntityRenderer(context, 5f));
     }
 }
