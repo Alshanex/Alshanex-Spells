@@ -92,13 +92,23 @@ public class HiganSpell extends AbstractSpell {
     }
 
     public void shootFirebolt(Level world, int spellLevel, LivingEntity entity) {
-        Vec3 origin = entity.getEyePosition().add(entity.getForward().normalize().scale(.2f));
-        FireboltProjectile firebolt = new FireboltProjectile(world, entity);
-        firebolt.setPos(origin.subtract(0, firebolt.getBbHeight(), 0));
-        firebolt.shoot(entity.getLookAngle());
-        firebolt.setDamage(getDamage(spellLevel, entity));
+        Vec3 origin = entity.getEyePosition().add(entity.getForward().normalize().scale(0.2f));
+
+        Vec3 rightVector = entity.getForward().cross(new Vec3(0, 1, 0)).normalize().scale(0.5);
+
+        FireboltProjectile firebolt1 = new FireboltProjectile(world, entity);
+        firebolt1.setPos(origin.add(rightVector).subtract(0, firebolt1.getBbHeight(), 0));
+        firebolt1.shoot(entity.getLookAngle());
+        firebolt1.setDamage(getDamage(spellLevel, entity)/2);
         world.playSound(null, origin.x, origin.y, origin.z, SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 2.0f, 1.0f);
-        world.addFreshEntity(firebolt);
+        world.addFreshEntity(firebolt1);
+
+        FireboltProjectile firebolt2 = new FireboltProjectile(world, entity);
+        firebolt2.setPos(origin.subtract(rightVector).subtract(0, firebolt2.getBbHeight(), 0));
+        firebolt2.shoot(entity.getLookAngle());
+        firebolt2.setDamage(getDamage(spellLevel, entity)/2);
+        world.playSound(null, origin.x, origin.y, origin.z, SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 2.0f, 1.0f);
+        world.addFreshEntity(firebolt2);
     }
 
     @Override

@@ -66,7 +66,7 @@ public class HikenEntity extends AbstractMagicProjectile {
                         explosion.finalizeExplosion(false);
                     }
                 }
-                List<LivingEntity> entitiesInRange = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.0D));
+                List<LivingEntity> entitiesInRange = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(3.0D));
 
                 for (LivingEntity targetEntity : entitiesInRange) {
                     if (targetEntity != this.getOwner() && targetEntity.isAlive()) {

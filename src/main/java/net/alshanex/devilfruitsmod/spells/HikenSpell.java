@@ -76,7 +76,7 @@ public class HikenSpell extends AbstractSpell {
         double offset = 0.5;
         int numberOfEntities = 3;
 
-        Vec3 right = new Vec3(forward.z, 0, -forward.x).normalize(); // Crea un vector perpendicular al frente
+        Vec3 right = new Vec3(forward.z, 0, -forward.x).normalize();
 
         for (int i = 0; i < numberOfEntities; i++) {
             HikenEntity fireball = new HikenEntity(world, entity);
