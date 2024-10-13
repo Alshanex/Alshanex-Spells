@@ -2,6 +2,7 @@ package net.alshanex.devilfruitsmod.setup;
 
 import net.alshanex.devilfruitsmod.DevilFruitsMod;
 import net.alshanex.devilfruitsmod.entity.ModEntities;
+import net.alshanex.devilfruitsmod.entity.custom.FrozenEntityRenderer;
 import net.alshanex.devilfruitsmod.entity.custom.HikenEntityRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -14,5 +15,6 @@ public class ClientSetup {
     public static void rendererRegister(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.HIKEN_ENTITY.get(), (context) -> new HikenEntityRenderer(context, 2f));
         event.registerEntityRenderer(ModEntities.HIBASHIRA_ENTITY.get(), (context) -> new HikenEntityRenderer(context, 5f));
+        event.registerEntityRenderer(ModEntities.FROZEN_ENTITY.get(), FrozenEntityRenderer::new);
     }
 }

@@ -1,6 +1,7 @@
 package net.alshanex.devilfruitsmod.entity;
 
 import net.alshanex.devilfruitsmod.DevilFruitsMod;
+import net.alshanex.devilfruitsmod.entity.custom.FrozenEntity;
 import net.alshanex.devilfruitsmod.entity.custom.HibashiraEntity;
 import net.alshanex.devilfruitsmod.entity.custom.HikenEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -30,4 +31,10 @@ public class ModEntities {
                     .sized(4f, .8f)
                     .clientTrackingRange(64)
                     .build(new ResourceLocation(DevilFruitsMod.MOD_ID, "hibashira").toString()));
+
+    public static final RegistryObject<EntityType<FrozenEntity>> FROZEN_ENTITY =
+            ENTITY_TYPES.register("frozen_entity", () -> EntityType.Builder.<FrozenEntity>of(FrozenEntity::new, MobCategory.CREATURE)
+                    .sized(.5f, .5f)
+                    .clientTrackingRange(64)
+                    .build(new ResourceLocation(DevilFruitsMod.MOD_ID, "frozen_entity").toString()));
 }

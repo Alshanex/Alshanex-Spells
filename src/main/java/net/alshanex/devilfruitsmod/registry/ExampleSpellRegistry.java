@@ -5,6 +5,7 @@ import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import net.alshanex.devilfruitsmod.spells.HibashiraSpell;
 import net.alshanex.devilfruitsmod.spells.HiganSpell;
 import net.alshanex.devilfruitsmod.spells.HikenSpell;
+import net.alshanex.devilfruitsmod.spells.IceAgeSpell;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -25,5 +26,6 @@ public class ExampleSpellRegistry {
     public static final RegistryObject<AbstractSpell> HIGAN = registerSpell(new HiganSpell());
     public static final RegistryObject<AbstractSpell> HIKEN = registerSpell(new HikenSpell());
     public static final RegistryObject<AbstractSpell> HIBASHIRA = registerSpell(new HibashiraSpell());
+    public static final RegistryObject<AbstractSpell> ICE_AGE = registerSpell(new IceAgeSpell());
 
 }
