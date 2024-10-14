@@ -20,6 +20,7 @@ import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.setup.Messages;
 import io.redspace.ironsspellbooks.spells.ender.TeleportSpell;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
+import net.alshanex.devilfruitsmod.effect.ModEffects;
 import net.alshanex.devilfruitsmod.entity.custom.FrozenEntity;
 import net.alshanex.devilfruitsmod.util.DFUtils;
 import net.minecraft.core.BlockPos;
@@ -113,6 +114,8 @@ public class IceAgeSpell extends AbstractSpell {
                                 frozenEntity.yBodyRot = livingEntity.getYRot();
                                 frozenEntity.setShatterDamage(getDamage(spellLevel, entity));
                                 frozenEntity.setDeathTimer(200);
+                                livingEntity.addEffect(new MobEffectInstance(MobEffectRegistry.TRUE_INVISIBILITY.get(), Integer.MAX_VALUE, 0, false, false));
+                                livingEntity.kill();
                                 livingEntity.remove(Entity.RemovalReason.KILLED);
                                 level.addFreshEntity(frozenEntity);
                             }
@@ -121,6 +124,8 @@ public class IceAgeSpell extends AbstractSpell {
                             frozenEntity.yBodyRot = livingEntity.getYRot();
                             frozenEntity.setShatterDamage(getDamage(spellLevel, entity));
                             frozenEntity.setDeathTimer(200);
+                            livingEntity.addEffect(new MobEffectInstance(MobEffectRegistry.TRUE_INVISIBILITY.get(), Integer.MAX_VALUE, 0, false, false));
+                            livingEntity.kill();
                             livingEntity.remove(Entity.RemovalReason.KILLED);
                             level.addFreshEntity(frozenEntity);
                         }

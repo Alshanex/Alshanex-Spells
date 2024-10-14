@@ -26,6 +26,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.IceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -91,11 +92,9 @@ public class ModEvents {
                     if (DFUtils.isIceOrSnow(blockBelow)) {
                         Vec3 attackDirection = event.getSource().getSourcePosition();
                         if (attackDirection != null) {
-                            Vec3 entityPosition = player.position();
-                            Vec3 directionVector = entityPosition.subtract(attackDirection).normalize();
 
                             FrozenHumanoid shadow = new FrozenHumanoid(player.level(), player);
-                            shadow.setShatterDamage(event.getAmount() * 0.1f);
+                            shadow.setShatterDamage(Math.max(event.getAmount() * 0.1f, 5f));
                             shadow.setDeathTimer(20);
                             player.level().addFreshEntity(shadow);
 
