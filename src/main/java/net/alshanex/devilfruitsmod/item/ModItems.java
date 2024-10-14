@@ -1,6 +1,7 @@
 package net.alshanex.devilfruitsmod.item;
 
 import net.alshanex.devilfruitsmod.DevilFruitsMod;
+import net.alshanex.devilfruitsmod.item.custom.HieHieItem;
 import net.alshanex.devilfruitsmod.item.custom.MeraMeraItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -18,4 +19,5 @@ public class ModItems {
     }
 
     public static final RegistryObject<Item> MERAMERA = ITEMS.register("meramerafruit", MeraMeraItem::new);
+    public static final RegistryObject<Item> HIEHIE = ITEMS.register("hiehiefruit", HieHieItem::new);
 }

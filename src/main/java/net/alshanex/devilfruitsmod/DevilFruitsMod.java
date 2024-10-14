@@ -65,6 +65,7 @@ public class DevilFruitsMod
     {
         if(event.getTabKey() == CreativeModeTabs.COMBAT){
             event.accept(ModItems.MERAMERA);
+            event.accept(ModItems.HIEHIE);
         }
     }
 

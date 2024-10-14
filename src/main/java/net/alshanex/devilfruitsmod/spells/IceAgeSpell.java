@@ -165,7 +165,7 @@ public class IceAgeSpell extends AbstractSpell {
     }
 
     private float getDamage(int spellLevel, LivingEntity caster) {
-        return this.getSpellPower(spellLevel, caster) * 0.8f;
+        return this.getSpellPower(spellLevel, caster) * 0.6f;
     }
 
     public int getDuration(int spellLevel, LivingEntity caster) {

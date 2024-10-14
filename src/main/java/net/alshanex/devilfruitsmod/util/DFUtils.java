@@ -1,5 +1,8 @@
 package net.alshanex.devilfruitsmod.util;
 
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.level.block.*;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -41,5 +44,15 @@ public class DFUtils {
         }
 
         return excludedBlocks;
+    }
+
+    public static boolean isIceOrSnow(Block block) {
+        return block instanceof IceBlock || block instanceof SnowLayerBlock || block instanceof SnowyDirtBlock
+                || block instanceof PowderSnowBlock;
+    }
+
+    public static boolean isFireDamage(DamageType type) {
+        return type.equals(DamageTypes.IN_FIRE) || type.equals(DamageTypes.ON_FIRE) ||
+                type.equals(DamageTypes.LAVA) || type.equals(DamageTypes.HOT_FLOOR);
     }
 }

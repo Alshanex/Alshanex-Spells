@@ -16,4 +16,5 @@ public class ModEffects {
     }
 
     public static final RegistryObject<MobEffect> MERA_LOGIA_EFFECT = MOB_EFFECT_DEFERRED_REGISTER.register("mera_logia", () -> new MeraLogiaEffect(MobEffectCategory.BENEFICIAL, 0x9f0be3));
+    public static final RegistryObject<MobEffect> ICE_LOGIA_EFFECT = MOB_EFFECT_DEFERRED_REGISTER.register("ice_logia", () -> new HieLogiaEffect(MobEffectCategory.BENEFICIAL, 0x9f0be3));
 }
