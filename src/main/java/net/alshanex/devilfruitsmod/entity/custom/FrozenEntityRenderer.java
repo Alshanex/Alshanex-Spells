@@ -2,9 +2,10 @@ package net.alshanex.devilfruitsmod.entity.custom;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.alshanex.devilfruitsmod.DevilFruitsMod;
 import net.alshanex.devilfruitsmod.util.FrozenEntityRenderType;
-import net.minecraft.client.model.BeeModel;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.ZombieModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -44,7 +45,7 @@ public class FrozenEntityRenderer extends EntityRenderer<FrozenEntity> {
 
     @Override
     public void render(FrozenEntity entityToFreeze, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
-        EntityModel model = new BeeModel(context.bakeLayer(ModelLayers.BEE));
+        EntityModel model = new ZombieModel(context.bakeLayer(ModelLayers.ZOMBIE));
 
         if (modelMap.get(entityToFreeze.getFrozenEntityTypeString()) != null) {
             model = modelMap.get(entityToFreeze.getFrozenEntityTypeString());
@@ -63,7 +64,11 @@ public class FrozenEntityRenderer extends EntityRenderer<FrozenEntity> {
         if (this.hollowEntityMap.get(entityToFreeze.getFrozenEntityTypeString()) == null) {
             Entity build = entityToFreeze.getFrozenEntityType().create(Minecraft.getInstance().level);
             if (build != null) {
-                build.load(entityToFreeze.getFrozenEntityTag());
+                try {
+                    build.load(entityToFreeze.getFrozenEntityTag());
+                } catch (Exception e) {
+                    DevilFruitsMod.LOGGER.warn("Mob " + entityToFreeze.getFrozenEntityTypeString() + " could not build Frozen Entity");
+                }
                 fakeEntity = this.hollowEntityMap.putIfAbsent(entityToFreeze.getFrozenEntityTypeString(), build);
             }
         } else {

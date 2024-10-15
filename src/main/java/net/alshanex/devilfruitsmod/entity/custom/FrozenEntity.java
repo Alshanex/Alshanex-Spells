@@ -61,8 +61,12 @@ public class FrozenEntity extends LivingEntity {
     public static FrozenEntity buildFrozenEntity(LivingEntity entityToFreeze, LivingEntity summoner) {
         FrozenEntity frozenEntity = ModEntities.FROZEN_ENTITY.get().create(entityToFreeze.level());
         CompoundTag entityTag = new CompoundTag();
-        if (!(entityToFreeze instanceof Player)) {
+        try {
+            if (!(entityToFreeze instanceof Player)) {
                 entityToFreeze.saveWithoutId(entityTag);
+            }
+        } catch (Exception e) {
+            DevilFruitsMod.LOGGER.warn("Mob " + frozenEntity.getFrozenEntityTypeString() + " could not build Frozen Entity");
         }
         frozenEntity.setFrozenEntityTag(entityTag);
         frozenEntity.setFrozenEntityTypeString(ForgeRegistries.ENTITY_TYPES.getKey(entityToFreeze.getType()).toString());
@@ -112,7 +116,7 @@ public class FrozenEntity extends LivingEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(FROZEN_ENTITY_TYPE, "minecraft:bee");
+        this.entityData.define(FROZEN_ENTITY_TYPE, "minecraft:zombie");
         this.entityData.define(FROZEN_ENTITY_DATA, new CompoundTag());
         this.entityData.define(FROZEN_ENTITY_WIDTH, 0.5F);
         this.entityData.define(FROZEN_ENTITY_HEIGHT, 0.5F);
@@ -123,7 +127,7 @@ public class FrozenEntity extends LivingEntity {
 
     public EntityType getFrozenEntityType() {
         String str = getFrozenEntityTypeString();
-        return EntityType.byString(str).orElse(EntityType.BEE);
+        return EntityType.byString(str).orElse(EntityType.ZOMBIE);
     }
 
     public String getFrozenEntityTypeString() {

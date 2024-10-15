@@ -20,7 +20,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(DevilFruitsMod.MOD_ID)
@@ -29,7 +30,7 @@ public class DevilFruitsMod
     // Define mod id in a common place for everything to reference
     public static final String MOD_ID = "devilfruitsmod";
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
     public DevilFruitsMod()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();

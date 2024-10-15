@@ -19,6 +19,7 @@ import io.redspace.ironsspellbooks.registries.ParticleRegistry;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.setup.Messages;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
+import net.alshanex.devilfruitsmod.datagen.EntityTagGenerator;
 import net.alshanex.devilfruitsmod.entity.custom.FrozenEntity;
 import net.alshanex.devilfruitsmod.util.DFUtils;
 import net.minecraft.core.BlockPos;
@@ -93,12 +94,12 @@ public class IceAgeSpell extends AbstractSpell {
         MagicManager.spawnParticles(level, new BlastwaveParticleOptions(SchoolRegistry.ICE.get().getTargetingColor(), radius), entity.getX(), entity.getY() + .165f, entity.getZ(), 1, 0, 0, 0, 0, true);
         Messages.sendToPlayersTrackingEntity(new ClientboundParticleShockwave(new Vec3(entity.getX(), entity.getY() + .165f, entity.getZ()), radius, ParticleRegistry.SNOWFLAKE_PARTICLE.get()), entity, true);
         level.getEntities(entity, entity.getBoundingBox().inflate(radius, 4, radius), (target) -> !DamageSources.isFriendlyFireBetween(target, entity) && Utils.hasLineOfSight(level, entity, target, true)).forEach(target -> {
-            if (target instanceof LivingEntity livingEntity && livingEntity.distanceToSqr(entity) < radius * radius && !DamageSources.isFriendlyFireBetween(target, entity) && Utils.hasLineOfSight(level, entity, target, true)) {
+            if (target instanceof LivingEntity livingEntity && livingEntity.distanceToSqr(entity) < radius * radius && !DamageSources.isFriendlyFireBetween(target, entity)) {
                 livingEntity.addEffect(new MobEffectInstance(MobEffectRegistry.CHILLED.get(), getDuration(spellLevel, entity)));
                 MagicManager.spawnParticles(level, ParticleHelper.SNOWFLAKE, livingEntity.getX(), livingEntity.getY() + livingEntity.getBbHeight() * .5f, livingEntity.getZ(), 50, livingEntity.getBbWidth() * .5f, livingEntity.getBbHeight() * .5f, livingEntity.getBbWidth() * .5f, .03, false);
 
                 if((livingEntity.getHealth() < (livingEntity.getMaxHealth() * 0.1) || livingEntity.getHealth() <= getDamage(spellLevel, entity))){
-                    if(!(livingEntity instanceof Player) && !(livingEntity instanceof FrozenEntity)){
+                    if(!(livingEntity instanceof Player) && livingEntity.getType().is(EntityTagGenerator.FREEZEABLE_ENTITIES)){
                         FrozenEntity frozenEntity = FrozenEntity.buildFrozenEntity(livingEntity, entity);
                         frozenEntity.absMoveTo(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), livingEntity.getYRot(), livingEntity.getXRot());
                         frozenEntity.yBodyRot = livingEntity.getYRot();
@@ -108,6 +109,8 @@ public class IceAgeSpell extends AbstractSpell {
                         livingEntity.kill();
                         livingEntity.remove(Entity.RemovalReason.KILLED);
                         level.addFreshEntity(frozenEntity);
+                    } else {
+                        DamageSources.applyDamage(livingEntity, getDamage(spellLevel, entity), getDamageSource(entity));
                     }
                 } else {
                     DamageSources.applyDamage(livingEntity, getDamage(spellLevel, entity), getDamageSource(entity));
