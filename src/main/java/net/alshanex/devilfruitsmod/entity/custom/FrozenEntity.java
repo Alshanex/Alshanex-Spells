@@ -112,7 +112,7 @@ public class FrozenEntity extends LivingEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(FROZEN_ENTITY_TYPE, "minecraft:creeper");
+        this.entityData.define(FROZEN_ENTITY_TYPE, "minecraft:bee");
         this.entityData.define(FROZEN_ENTITY_DATA, new CompoundTag());
         this.entityData.define(FROZEN_ENTITY_WIDTH, 0.5F);
         this.entityData.define(FROZEN_ENTITY_HEIGHT, 0.5F);
@@ -123,7 +123,7 @@ public class FrozenEntity extends LivingEntity {
 
     public EntityType getFrozenEntityType() {
         String str = getFrozenEntityTypeString();
-        return EntityType.byString(str).orElse(EntityType.CREEPER);
+        return EntityType.byString(str).orElse(EntityType.BEE);
     }
 
     public String getFrozenEntityTypeString() {
@@ -209,6 +209,17 @@ public class FrozenEntity extends LivingEntity {
     @Override
     public void tick() {
         super.tick();
+
+        this.setYRot(this.yBodyRot);
+        this.yHeadRot = this.getYRot();
+        if (Math.abs(this.getBbWidth() - getFrozenEntityWidth()) > 0.01 || Math.abs(this.getBbHeight() - getFrozenEntityHeight()) > 0.01) {
+            double prevX = this.getX();
+            double prevZ = this.getZ();
+            this.frozenEntitySize = EntityDimensions.scalable(getFrozenEntityWidth(), getFrozenEntityHeight());
+            refreshDimensions();
+            this.setPos(prevX, this.getY(), prevZ);
+        }
+
         if (deathTimer > 0) {
             deathTimer--;
 

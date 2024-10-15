@@ -10,11 +10,15 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FrostedIceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HieLogiaEffect extends MagicMobEffect {
     public HieLogiaEffect(MobEffectCategory pCategory, int pColor) {
@@ -31,5 +35,11 @@ public class HieLogiaEffect extends MagicMobEffect {
                 player.removeEffect(MobEffectRegistry.CHILLED.get());
             }
         }
+    }
+
+    @Override
+    public List<ItemStack> getCurativeItems() {
+        ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+        return ret;
     }
 }

@@ -3,7 +3,7 @@ package net.alshanex.devilfruitsmod.entity.custom;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.alshanex.devilfruitsmod.util.FrozenEntityRenderType;
-import net.minecraft.client.model.CreeperModel;
+import net.minecraft.client.model.BeeModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -44,7 +44,7 @@ public class FrozenEntityRenderer extends EntityRenderer<FrozenEntity> {
 
     @Override
     public void render(FrozenEntity entityToFreeze, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
-        EntityModel model = new CreeperModel(context.bakeLayer(ModelLayers.CREEPER));
+        EntityModel model = new BeeModel(context.bakeLayer(ModelLayers.BEE));
 
         if (modelMap.get(entityToFreeze.getFrozenEntityTypeString()) != null) {
             model = modelMap.get(entityToFreeze.getFrozenEntityTypeString());

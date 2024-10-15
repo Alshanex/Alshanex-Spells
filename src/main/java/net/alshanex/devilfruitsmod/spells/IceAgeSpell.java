@@ -18,30 +18,22 @@ import io.redspace.ironsspellbooks.registries.MobEffectRegistry;
 import io.redspace.ironsspellbooks.registries.ParticleRegistry;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.setup.Messages;
-import io.redspace.ironsspellbooks.spells.ender.TeleportSpell;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
-import net.alshanex.devilfruitsmod.effect.ModEffects;
 import net.alshanex.devilfruitsmod.entity.custom.FrozenEntity;
 import net.alshanex.devilfruitsmod.util.DFUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -101,34 +93,21 @@ public class IceAgeSpell extends AbstractSpell {
         MagicManager.spawnParticles(level, new BlastwaveParticleOptions(SchoolRegistry.ICE.get().getTargetingColor(), radius), entity.getX(), entity.getY() + .165f, entity.getZ(), 1, 0, 0, 0, 0, true);
         Messages.sendToPlayersTrackingEntity(new ClientboundParticleShockwave(new Vec3(entity.getX(), entity.getY() + .165f, entity.getZ()), radius, ParticleRegistry.SNOWFLAKE_PARTICLE.get()), entity, true);
         level.getEntities(entity, entity.getBoundingBox().inflate(radius, 4, radius), (target) -> !DamageSources.isFriendlyFireBetween(target, entity) && Utils.hasLineOfSight(level, entity, target, true)).forEach(target -> {
-            if (target instanceof LivingEntity livingEntity && livingEntity.distanceToSqr(entity) < radius * radius) {
+            if (target instanceof LivingEntity livingEntity && livingEntity.distanceToSqr(entity) < radius * radius && !DamageSources.isFriendlyFireBetween(target, entity) && Utils.hasLineOfSight(level, entity, target, true)) {
                 livingEntity.addEffect(new MobEffectInstance(MobEffectRegistry.CHILLED.get(), getDuration(spellLevel, entity)));
                 MagicManager.spawnParticles(level, ParticleHelper.SNOWFLAKE, livingEntity.getX(), livingEntity.getY() + livingEntity.getBbHeight() * .5f, livingEntity.getZ(), 50, livingEntity.getBbWidth() * .5f, livingEntity.getBbHeight() * .5f, livingEntity.getBbWidth() * .5f, .03, false);
 
                 if((livingEntity.getHealth() < (livingEntity.getMaxHealth() * 0.1) || livingEntity.getHealth() <= getDamage(spellLevel, entity))){
                     if(!(livingEntity instanceof Player) && !(livingEntity instanceof FrozenEntity)){
                         FrozenEntity frozenEntity = FrozenEntity.buildFrozenEntity(livingEntity, entity);
-                        if(frozenEntity.getFrozenEntityType() == EntityType.CREEPER){
-                            if(livingEntity.getType() == EntityType.CREEPER){
-                                frozenEntity.absMoveTo(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), livingEntity.getYRot(), livingEntity.getXRot());
-                                frozenEntity.yBodyRot = livingEntity.getYRot();
-                                frozenEntity.setShatterDamage(getDamage(spellLevel, entity));
-                                frozenEntity.setDeathTimer(200);
-                                livingEntity.addEffect(new MobEffectInstance(MobEffectRegistry.TRUE_INVISIBILITY.get(), Integer.MAX_VALUE, 0, false, false));
-                                livingEntity.kill();
-                                livingEntity.remove(Entity.RemovalReason.KILLED);
-                                level.addFreshEntity(frozenEntity);
-                            }
-                        } else {
-                            frozenEntity.absMoveTo(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), livingEntity.getYRot(), livingEntity.getXRot());
-                            frozenEntity.yBodyRot = livingEntity.getYRot();
-                            frozenEntity.setShatterDamage(getDamage(spellLevel, entity));
-                            frozenEntity.setDeathTimer(200);
-                            livingEntity.addEffect(new MobEffectInstance(MobEffectRegistry.TRUE_INVISIBILITY.get(), Integer.MAX_VALUE, 0, false, false));
-                            livingEntity.kill();
-                            livingEntity.remove(Entity.RemovalReason.KILLED);
-                            level.addFreshEntity(frozenEntity);
-                        }
+                        frozenEntity.absMoveTo(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), livingEntity.getYRot(), livingEntity.getXRot());
+                        frozenEntity.yBodyRot = livingEntity.getYRot();
+                        frozenEntity.setShatterDamage(getDamage(spellLevel, entity));
+                        frozenEntity.setDeathTimer(200);
+                        livingEntity.addEffect(new MobEffectInstance(MobEffectRegistry.TRUE_INVISIBILITY.get(), Integer.MAX_VALUE, 0, false, false));
+                        livingEntity.kill();
+                        livingEntity.remove(Entity.RemovalReason.KILLED);
+                        level.addFreshEntity(frozenEntity);
                     }
                 } else {
                     DamageSources.applyDamage(livingEntity, getDamage(spellLevel, entity), getDamageSource(entity));
