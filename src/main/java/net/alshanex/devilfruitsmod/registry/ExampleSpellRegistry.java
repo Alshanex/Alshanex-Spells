@@ -25,5 +25,6 @@ public class ExampleSpellRegistry {
     public static final RegistryObject<AbstractSpell> HIBASHIRA = registerSpell(new HibashiraSpell());
     public static final RegistryObject<AbstractSpell> ICE_AGE = registerSpell(new IceAgeSpell());
     public static final RegistryObject<AbstractSpell> ICE_CHAMBER = registerSpell(new IceChamberSpell());
+    public static final RegistryObject<AbstractSpell> ICE_PARTISAN = registerSpell(new IcePartisanSpell());
 
 }

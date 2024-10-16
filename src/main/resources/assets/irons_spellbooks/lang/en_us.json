@@ -493,9 +493,6 @@
   "spell.irons_spellbooks.forest_guardian": "Guardian of the Forest",
   "spell.irons_spellbooks.summon_watcher": "Robotic Friends",
   "spell.irons_spellbooks.zone_spell": "Monarch",
-  "spell.irons_spellbooks.hiken": "Hiken",
-  "spell.irons_spellbooks.higan": "Higan",
-  "spell.irons_spellbooks.hibashira": "Hibashira",
 
   "spell.irons_spellbooks.none.guide": "Nothing to see here!",
   "spell.irons_spellbooks.soul_summon.guide": "Use the soul to summon the mob who once had that soul.",
@@ -594,9 +591,6 @@
   "spell.irons_spellbooks.gluttony.guide": "Turn your stomach into an arcane furnace, turning eaten food into mana for a duration.",
   "spell.irons_spellbooks.flaming_strike.guide": "Unleash a sweeping melee attack in the form of a wreath of flames. This spell is uninterruptible. The damage scales off of your held weapon's melee damage and enchantments.",
   "spell.irons_spellbooks.shockwave.guide": "Coalesce a surge of electrical power, and unleash it in a devastating shockwave, blasting exposed creatures.",
-  "spell.irons_spellbooks.hiken.guide": "Hiken.",
-  "spell.irons_spellbooks.higan.guide": "Higan.",
-  "spell.irons_spellbooks.hibashira.guide": "Hibashira.",
 
   "death.attack.blood_magic": "%1$s blood magic 1",
   "death.attack.blood_magic.item": "%1$s blood magic 2",

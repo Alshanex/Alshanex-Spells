@@ -16,6 +16,7 @@ import java.util.UUID;
 public class HieHieItem extends UniqueSpellBook {
     public HieHieItem() {
         super(SpellRarity.LEGENDARY, SpellDataRegistryHolder.of(
+                new SpellDataRegistryHolder(ExampleSpellRegistry.ICE_PARTISAN, 10),
                 new SpellDataRegistryHolder(ExampleSpellRegistry.ICE_CHAMBER, 5),
                 new SpellDataRegistryHolder(ExampleSpellRegistry.ICE_AGE, 1)
         ), 7, () -> {

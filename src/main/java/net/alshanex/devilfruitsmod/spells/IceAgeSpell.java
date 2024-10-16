@@ -97,6 +97,7 @@ public class IceAgeSpell extends AbstractSpell {
         Messages.sendToPlayersTrackingEntity(new ClientboundParticleShockwave(new Vec3(entity.getX(), entity.getY() + .165f, entity.getZ()), radius, ParticleRegistry.SNOWFLAKE_PARTICLE.get()), entity, true);
         level.getEntities(entity, entity.getBoundingBox().inflate(radius, 4, radius), (target) -> !DamageSources.isFriendlyFireBetween(target, entity) && Utils.hasLineOfSight(level, entity, target, true)).forEach(target -> {
             if (target instanceof LivingEntity livingEntity && livingEntity.distanceToSqr(entity) < radius * radius && !DamageSources.isFriendlyFireBetween(target, entity)) {
+                DamageSources.applyDamage(livingEntity, getDamage(spellLevel, entity), getDamageSource(entity));
                 livingEntity.addEffect(new MobEffectInstance(MobEffectRegistry.CHILLED.get(), getDuration(spellLevel, entity)));
                 MagicManager.spawnParticles(level, ParticleHelper.SNOWFLAKE, livingEntity.getX(), livingEntity.getY() + livingEntity.getBbHeight() * .5f, livingEntity.getZ(), 50, livingEntity.getBbWidth() * .5f, livingEntity.getBbHeight() * .5f, livingEntity.getBbWidth() * .5f, .03, false);
 
@@ -111,11 +112,7 @@ public class IceAgeSpell extends AbstractSpell {
                         livingEntity.kill();
                         livingEntity.remove(Entity.RemovalReason.KILLED);
                         level.addFreshEntity(frozenEntity);
-                    } else {
-                        DamageSources.applyDamage(livingEntity, getDamage(spellLevel, entity), getDamageSource(entity));
                     }
-                } else {
-                    DamageSources.applyDamage(livingEntity, getDamage(spellLevel, entity), getDamageSource(entity));
                 }
             }
         });

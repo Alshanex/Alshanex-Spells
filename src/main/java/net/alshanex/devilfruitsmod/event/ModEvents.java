@@ -2,12 +2,14 @@ package net.alshanex.devilfruitsmod.event;
 
 import com.google.common.eventbus.Subscribe;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
+import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
 import io.redspace.ironsspellbooks.compat.Curios;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.entity.mobs.MagicSummon;
 import io.redspace.ironsspellbooks.entity.mobs.frozen_humanoid.FrozenHumanoid;
 import io.redspace.ironsspellbooks.network.ClientboundSyncMana;
 import io.redspace.ironsspellbooks.setup.Messages;
+import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.alshanex.devilfruitsmod.DevilFruitsMod;
 import net.alshanex.devilfruitsmod.effect.ModEffects;
 import net.alshanex.devilfruitsmod.item.ModItems;
@@ -95,6 +97,7 @@ public class ModEvents {
                             shadow.setShatterDamage(Math.max(event.getAmount() * 0.1f, 5f));
                             shadow.setDeathTimer(20);
                             player.level().addFreshEntity(shadow);
+                            MagicManager.spawnParticles(player.level(), ParticleHelper.ICY_FOG, player.getX(), player.getY(), player.getZ(), 4, 0, 0, 0, .3, true);
 
                             Vec3 knockbackDirection = player.position().subtract(attackDirection).normalize();
                             double knockbackStrength = 1.5;

@@ -26,7 +26,7 @@ public class ModBlocks {
                     .mapColor(MapColor.ICE)
                     .strength(0.5F)
                     .sound(SoundType.GLASS)
-                    .friction(0.98f)
+                    .friction(0.9f)
                     .noOcclusion()
                     .isViewBlocking((state, world, pos) -> false)
                     .isSuffocating((state, world, pos) -> false)
