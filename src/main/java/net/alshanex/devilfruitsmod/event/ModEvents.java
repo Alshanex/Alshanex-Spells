@@ -83,20 +83,24 @@ public class ModEvents {
 
         @SubscribeEvent
         public static void onEntityAttacked(LivingHurtEvent event) {
-
             if (event.getEntity() instanceof ServerPlayer player) {
                 MagicData magicData = MagicData.getPlayerMagicData(player);
-                if(player.hasEffect(ModEffects.ICE_LOGIA_EFFECT.get()) && magicData.getMana() >= 20 && !(DFUtils.isFireDamage(event.getSource().type()))){
+                if (player.hasEffect(ModEffects.ICE_LOGIA_EFFECT.get()) && magicData.getMana() >= 20 && !(DFUtils.isFireDamage(event.getSource().type()))) {
                     BlockPos blockBelowPos = player.blockPosition().below();
                     Block blockBelow = player.level().getBlockState(blockBelowPos).getBlock();
                     if (DFUtils.isIceOrSnow(blockBelow)) {
                         Vec3 attackDirection = event.getSource().getSourcePosition();
                         if (attackDirection != null) {
-
                             FrozenHumanoid shadow = new FrozenHumanoid(player.level(), player);
                             shadow.setShatterDamage(Math.max(event.getAmount() * 0.1f, 5f));
                             shadow.setDeathTimer(20);
                             player.level().addFreshEntity(shadow);
+
+                            Vec3 knockbackDirection = player.position().subtract(attackDirection).normalize();
+                            double knockbackStrength = 1.5;
+
+                            player.setDeltaMovement(player.getDeltaMovement().add(knockbackDirection.scale(knockbackStrength)));
+                            player.hurtMarked = true;
 
                             magicData.setMana(magicData.getMana() - 20);
                             Messages.sendToPlayer(new ClientboundSyncMana(magicData), player);

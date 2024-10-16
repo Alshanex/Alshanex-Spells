@@ -24,25 +24,23 @@ public class DFUtils {
 
         for (Block block : ForgeRegistries.BLOCKS) {
             if (block instanceof TrapDoorBlock || block instanceof DoorBlock || block instanceof SignBlock || block instanceof BedBlock
-                    || block instanceof AbstractBannerBlock || block instanceof AbstractCandleBlock || block instanceof AbstractCauldronBlock
-                    || block instanceof AbstractChestBlock<?> || block instanceof AbstractFurnaceBlock || block instanceof BarrierBlock
-                    || block instanceof AbstractSkullBlock || block instanceof AnvilBlock || block instanceof BarrelBlock
+                    || block instanceof AbstractBannerBlock || block instanceof AbstractCandleBlock
+                    || block instanceof AbstractChestBlock<?> || block instanceof BarrierBlock || block instanceof AbstractSkullBlock
                     || block instanceof CoralBlock || block instanceof CoralFanBlock || block instanceof CoralPlantBlock
-                    || block instanceof CoralWallFanBlock || block instanceof AmethystBlock || block instanceof CartographyTableBlock
-                    || block instanceof PressurePlateBlock || block instanceof RailBlock || block instanceof BeehiveBlock
-                    || block instanceof BellBlock || block instanceof BrewingStandBlock || block instanceof ButtonBlock
-                    || block instanceof CampfireBlock || block instanceof ChorusPlantBlock || block instanceof StructureBlock
-                    || block instanceof CakeBlock || block instanceof CommandBlock || block instanceof CraftingTableBlock
+                    || block instanceof CoralWallFanBlock || block instanceof PressurePlateBlock || block instanceof RailBlock
+                    || block instanceof BeehiveBlock || block instanceof BellBlock || block instanceof BrewingStandBlock
+                    || block instanceof ButtonBlock || block instanceof CampfireBlock || block instanceof ChorusPlantBlock
+                    || block instanceof StructureBlock || block instanceof CakeBlock || block instanceof CommandBlock
                     || block instanceof ShulkerBoxBlock || block instanceof EnchantmentTableBlock
                     || block instanceof BeaconBlock || block instanceof FlowerPotBlock || block instanceof EndGatewayBlock
                     || block instanceof EndPortalBlock || block instanceof EndRodBlock || block instanceof NetherPortalBlock
                     || block instanceof EndPortalFrameBlock || block instanceof RedStoneWireBlock || block instanceof HopperBlock
-                    || block instanceof ComparatorBlock || block instanceof RepeaterBlock || block instanceof MushroomBlock
+                    || block instanceof ComparatorBlock || block instanceof RepeaterBlock || block instanceof VineBlock
                     || block instanceof SpawnerBlock || block instanceof LadderBlock || block instanceof RespawnAnchorBlock
                     || block instanceof LeverBlock || block instanceof DaylightDetectorBlock || block instanceof ChorusFlowerBlock
                     || block instanceof WaterlilyBlock || block instanceof SculkShriekerBlock || block instanceof TripWireHookBlock
                     || block instanceof SculkSensorBlock || block instanceof DragonEggBlock || block instanceof TripWireBlock
-                    || block instanceof TallSeagrassBlock || block instanceof  KelpPlantBlock) {
+                    || block instanceof TallSeagrassBlock || block instanceof  KelpPlantBlock || block instanceof TwistingVinesBlock) {
                 excludedBlocks.add(block);
             }
         }
@@ -54,10 +52,8 @@ public class DFUtils {
         Set<Block> excludedBlocks = new HashSet<>();
 
         for (Block block : ForgeRegistries.BLOCKS) {
-            if (block instanceof TorchBlock || block instanceof SugarCaneBlock || block instanceof CactusBlock
-                    || block instanceof CarpetBlock || block instanceof BambooStalkBlock || block instanceof BambooSaplingBlock
-                    || block instanceof VineBlock || block instanceof SculkVeinBlock || block instanceof TwistingVinesBlock
-                    || block instanceof WallBlock || block instanceof BushBlock) {
+            if (block instanceof TorchBlock || block instanceof CarpetBlock || block instanceof SculkVeinBlock
+                    || block instanceof BushBlock) {
                 excludedBlocks.add(block);
             }
         }
