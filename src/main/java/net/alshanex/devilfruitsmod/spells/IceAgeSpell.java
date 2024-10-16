@@ -19,10 +19,12 @@ import io.redspace.ironsspellbooks.registries.ParticleRegistry;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.setup.Messages;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
+import net.alshanex.devilfruitsmod.block.ModBlocks;
 import net.alshanex.devilfruitsmod.datagen.EntityTagGenerator;
 import net.alshanex.devilfruitsmod.entity.custom.FrozenEntity;
 import net.alshanex.devilfruitsmod.util.DFUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -32,8 +34,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -120,6 +122,7 @@ public class IceAgeSpell extends AbstractSpell {
 
         BlockPos center = entity.blockPosition();
         Set<Block> excludedBlocks = DFUtils.nonFreezeableBlocks();
+        Set<Block> iceableBlocks = DFUtils.iceableBlocks();
 
         for (int x = (int) Math.floor(-radius); x <= Math.ceil(radius); x++) {
             for (int y = -3; y <= 5; y++) {
@@ -132,7 +135,25 @@ public class IceAgeSpell extends AbstractSpell {
                     boolean isAboveCenter = currentPos.equals(center.above()) || currentPos.equals(center.above(2));
 
                     if (distance <= radius && !excludedBlocks.contains(blockState.getBlock()) &&
-                            (blockState.getBlock() == Blocks.WATER || !blockState.isAir()) && !isAboveCenter) {
+                            blockState.getBlock() != Blocks.WATER && !blockState.isAir() && blockState.getBlock() != ModBlocks.ICE_SURFACE_BLOCK.get()
+                    && blockState.getBlock() != Blocks.AIR) {
+
+                        for (Direction direction : Direction.values()) {
+                            BlockPos adjacentPos = currentPos.relative(direction);
+                            var adjacentState = level.getBlockState(adjacentPos);
+
+                            if (adjacentState.isAir() || iceableBlocks.contains(adjacentState.getBlock())) {
+                                BlockState iceSurfaceState = ModBlocks.ICE_SURFACE_BLOCK.get().defaultBlockState()
+                                        .setValue(MultifaceBlock.getFaceProperty(direction.getOpposite()), true);
+
+                                level.setBlockAndUpdate(adjacentPos, iceSurfaceState);
+                            } else if (adjacentState.getBlock() == ModBlocks.ICE_SURFACE_BLOCK.get()) {
+                                BlockState updatedState = adjacentState.setValue(MultifaceBlock.getFaceProperty(direction.getOpposite()), true);
+                                level.setBlockAndUpdate(adjacentPos, updatedState);
+                            }
+                        }
+
+                    } else if (distance <= radius && blockState.getBlock() == Blocks.WATER && !isAboveCenter) {
                         level.setBlockAndUpdate(currentPos, Blocks.ICE.defaultBlockState());
                     }
                 }

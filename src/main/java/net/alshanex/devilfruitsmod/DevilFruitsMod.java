@@ -1,6 +1,7 @@
 package net.alshanex.devilfruitsmod;
 
 import com.mojang.logging.LogUtils;
+import net.alshanex.devilfruitsmod.block.ModBlocks;
 import net.alshanex.devilfruitsmod.effect.ModEffects;
 import net.alshanex.devilfruitsmod.entity.ModEntities;
 import net.alshanex.devilfruitsmod.item.ModItems;
@@ -36,6 +37,8 @@ public class DevilFruitsMod
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(modEventBus);
+
+        ModBlocks.register(modEventBus);
 
         ModEffects.register(modEventBus);
 
