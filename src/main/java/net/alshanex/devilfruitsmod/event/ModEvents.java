@@ -116,7 +116,6 @@ public class ModEvents {
             if(event.getIdentifier().equals(Curios.SPELLBOOK_SLOT)){
                 if(event.getTo().is(ModItems.MERAMERA.get())) {
                     event.getEntity().addEffect(new MobEffectInstance(ModEffects.MERA_LOGIA_EFFECT.get(), Integer.MAX_VALUE, 0, false, false));
-                    event.getEntity().addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, Integer.MAX_VALUE, 0, false, false));
                 } else if(event.getTo().is(ModItems.HIEHIE.get())) {
                     event.getEntity().addEffect(new MobEffectInstance(ModEffects.ICE_LOGIA_EFFECT.get(), Integer.MAX_VALUE, 0, false, false));
                 }

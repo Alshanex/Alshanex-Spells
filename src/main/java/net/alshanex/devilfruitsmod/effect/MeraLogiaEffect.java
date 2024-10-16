@@ -2,6 +2,8 @@ package net.alshanex.devilfruitsmod.effect;
 
 import io.redspace.ironsspellbooks.effect.MagicMobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -14,8 +16,13 @@ public class MeraLogiaEffect extends MagicMobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int pAmplifier) {
+    public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
+        return pDuration % 20 == 0;
+    }
 
+    @Override
+    public void applyEffectTick(LivingEntity entity, int pAmplifier) {
+        entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 21, 0, false, false));
     }
 
     @Override
