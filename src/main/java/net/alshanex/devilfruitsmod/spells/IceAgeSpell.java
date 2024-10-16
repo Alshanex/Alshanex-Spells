@@ -133,7 +133,7 @@ public class IceAgeSpell extends AbstractSpell {
 
                     if (distance <= radius && !excludedBlocks.contains(blockState.getBlock()) &&
                             blockState.getBlock() != Blocks.WATER && !blockState.isAir() && blockState.getBlock() != ModBlocks.ICE_SURFACE_BLOCK.get()
-                    && blockState.getBlock() != Blocks.AIR) {
+                    && blockState.getBlock() != Blocks.AIR && !blockState.getFluidState().isSource() && !DFUtils.isIceOrSnow(blockState.getBlock())) {
 
                         for (Direction direction : Direction.values()) {
                             BlockPos adjacentPos = currentPos.relative(direction);
