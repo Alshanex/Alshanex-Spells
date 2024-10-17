@@ -36,6 +36,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -132,8 +133,8 @@ public class IceAgeSpell extends AbstractSpell {
                     boolean isAboveCenter = currentPos.equals(center.above()) || currentPos.equals(center.above(2));
 
                     if (distance <= radius && !excludedBlocks.contains(blockState.getBlock()) &&
-                            blockState.getBlock() != Blocks.WATER && !blockState.isAir() && blockState.getBlock() != ModBlocks.ICE_SURFACE_BLOCK.get()
-                    && blockState.getBlock() != Blocks.AIR && !blockState.getFluidState().isSource() && !DFUtils.isIceOrSnow(blockState.getBlock())) {
+                            blockState.getFluidState().getType() == Fluids.EMPTY && !blockState.isAir() &&
+                            !DFUtils.isIceOrSnow(blockState.getBlock())) {
 
                         for (Direction direction : Direction.values()) {
                             BlockPos adjacentPos = currentPos.relative(direction);
@@ -152,6 +153,8 @@ public class IceAgeSpell extends AbstractSpell {
 
                     } else if (distance <= radius && blockState.getBlock() == Blocks.WATER && !isAboveCenter) {
                         level.setBlockAndUpdate(currentPos, Blocks.ICE.defaultBlockState());
+                    } else if (distance <= radius && blockState.getBlock() == Blocks.LAVA && !isAboveCenter) {
+                        level.setBlockAndUpdate(currentPos, Blocks.MAGMA_BLOCK.defaultBlockState());
                     }
                 }
             }

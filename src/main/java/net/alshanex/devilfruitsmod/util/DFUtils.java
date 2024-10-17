@@ -3,12 +3,9 @@ package net.alshanex.devilfruitsmod.util;
 import io.redspace.ironsspellbooks.registries.EntityRegistry;
 import net.alshanex.devilfruitsmod.block.ModBlocks;
 import net.alshanex.devilfruitsmod.entity.ModEntities;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.*;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -40,7 +37,9 @@ public class DFUtils {
                     || block instanceof LeverBlock || block instanceof DaylightDetectorBlock || block instanceof ChorusFlowerBlock
                     || block instanceof WaterlilyBlock || block instanceof SculkShriekerBlock || block instanceof TripWireHookBlock
                     || block instanceof SculkSensorBlock || block instanceof DragonEggBlock || block instanceof TripWireBlock
-                    || block instanceof TallSeagrassBlock || block instanceof  KelpPlantBlock || block instanceof TwistingVinesBlock) {
+                    || block instanceof TallSeagrassBlock || block instanceof  KelpPlantBlock || block instanceof TwistingVinesBlock
+                    || block instanceof BambooStalkBlock || block instanceof BambooSaplingBlock || block instanceof SugarCaneBlock
+                    || block instanceof CactusBlock) {
                 excludedBlocks.add(block);
             }
         }
@@ -53,7 +52,7 @@ public class DFUtils {
 
         for (Block block : ForgeRegistries.BLOCKS) {
             if (block instanceof TorchBlock || block instanceof CarpetBlock || block instanceof SculkVeinBlock
-                    || block instanceof BushBlock) {
+                    || block instanceof BushBlock || block instanceof TallGrassBlock) {
                 excludedBlocks.add(block);
             }
         }
@@ -62,7 +61,7 @@ public class DFUtils {
     }
 
     public static boolean isIceOrSnow(Block block) {
-        return block instanceof IceBlock || block instanceof SnowLayerBlock || block instanceof SnowyDirtBlock
+        return block instanceof IceBlock || block instanceof SnowLayerBlock
                 || block instanceof PowderSnowBlock || block == ModBlocks.ICE_SURFACE_BLOCK.get();
     }
 

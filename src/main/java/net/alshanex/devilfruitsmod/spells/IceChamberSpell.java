@@ -30,7 +30,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.MultifaceBlock;
+import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
@@ -99,7 +101,6 @@ public class IceChamberSpell extends AbstractSpell {
             Entity target = ((EntityHitResult) hitResult).getEntity();
             //Set freeze time right here because it scales off of level and power
             DamageSources.applyDamage(target, getDamage(spellLevel, entity), getDamageSource(entity).setFreezeTicks(target.getTicksRequiredToFreeze() + getFreezeTime(spellLevel, entity)));
-            MagicManager.spawnParticles(level, ParticleHelper.ICY_FOG, hitResult.getLocation().x, target.getY(), hitResult.getLocation().z, 4, 0, 0, 0, .3, true);
 
             if (target instanceof LivingEntity livingEntity && !DamageSources.isFriendlyFireBetween(target, entity)) {
                 if((livingEntity.getHealth() < (livingEntity.getMaxHealth() * 0.1) || livingEntity.getHealth() <= getDamage(spellLevel, entity))){
@@ -132,8 +133,8 @@ public class IceChamberSpell extends AbstractSpell {
                         boolean isAboveCenter = currentPos.equals(center.above()) || currentPos.equals(center.above(2));
 
                         if (distance <= radius && !excludedBlocks.contains(blockState.getBlock()) &&
-                                blockState.getBlock() != Blocks.WATER && !blockState.isAir() && blockState.getBlock() != ModBlocks.ICE_SURFACE_BLOCK.get()
-                                && blockState.getBlock() != Blocks.AIR && !blockState.getFluidState().isSource() && !DFUtils.isIceOrSnow(blockState.getBlock())) {
+                                blockState.getFluidState().getType() == Fluids.EMPTY && !blockState.isAir() &&
+                                !DFUtils.isIceOrSnow(blockState.getBlock())) {
 
                             for (Direction direction : Direction.values()) {
                                 BlockPos adjacentPos = currentPos.relative(direction);
@@ -152,13 +153,13 @@ public class IceChamberSpell extends AbstractSpell {
 
                         } else if (distance <= radius && blockState.getBlock() == Blocks.WATER && !isAboveCenter) {
                             level.setBlockAndUpdate(currentPos, Blocks.ICE.defaultBlockState());
+                        }  else if (distance <= radius && blockState.getBlock() == Blocks.LAVA && !isAboveCenter) {
+                            level.setBlockAndUpdate(currentPos, Blocks.MAGMA_BLOCK.defaultBlockState());
                         }
                     }
                 }
             }
         } else if (hitResult.getType() == HitResult.Type.BLOCK) {
-            MagicManager.spawnParticles(level, ParticleHelper.ICY_FOG, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z, 4, 0, 0, 0, .3, true);
-
             BlockPos center = new BlockPos((int)hitResult.getLocation().x, (int)hitResult.getLocation().y, (int)hitResult.getLocation().z);
             Set<Block> excludedBlocks = DFUtils.nonFreezeableBlocks();
             Set<Block> iceableBlocks = DFUtils.iceableBlocks();
@@ -174,8 +175,8 @@ public class IceChamberSpell extends AbstractSpell {
                         boolean isAboveCenter = currentPos.equals(center.above()) || currentPos.equals(center.above(2));
 
                         if (distance <= radius && !excludedBlocks.contains(blockState.getBlock()) &&
-                                blockState.getBlock() != Blocks.WATER && !blockState.isAir() && blockState.getBlock() != ModBlocks.ICE_SURFACE_BLOCK.get()
-                                && blockState.getBlock() != Blocks.AIR && !blockState.getFluidState().isSource() && !DFUtils.isIceOrSnow(blockState.getBlock())) {
+                                blockState.getFluidState().getType() == Fluids.EMPTY && !blockState.isAir() &&
+                                !DFUtils.isIceOrSnow(blockState.getBlock())) {
 
                             for (Direction direction : Direction.values()) {
                                 BlockPos adjacentPos = currentPos.relative(direction);
@@ -194,6 +195,8 @@ public class IceChamberSpell extends AbstractSpell {
 
                         } else if (distance <= radius && blockState.getBlock() == Blocks.WATER && !isAboveCenter) {
                             level.setBlockAndUpdate(currentPos, Blocks.ICE.defaultBlockState());
+                        }  else if (distance <= radius && blockState.getBlock() == Blocks.LAVA && !isAboveCenter) {
+                            level.setBlockAndUpdate(currentPos, Blocks.MAGMA_BLOCK.defaultBlockState());
                         }
                     }
                 }
