@@ -12,14 +12,19 @@ import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.damage.SpellDamageSource;
 import io.redspace.ironsspellbooks.entity.spells.AbstractConeProjectile;
 import io.redspace.ironsspellbooks.entity.spells.cone_of_cold.ConeOfColdProjectile;
+import io.redspace.ironsspellbooks.network.spell.ClientboundParticleShockwave;
+import io.redspace.ironsspellbooks.particle.BlastwaveParticleOptions;
 import io.redspace.ironsspellbooks.registries.MobEffectRegistry;
+import io.redspace.ironsspellbooks.registries.ParticleRegistry;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
+import io.redspace.ironsspellbooks.setup.Messages;
 import io.redspace.ironsspellbooks.spells.EntityCastData;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.alshanex.devilfruitsmod.block.ModBlocks;
 import net.alshanex.devilfruitsmod.datagen.EntityTagGenerator;
 import net.alshanex.devilfruitsmod.entity.ModEntities;
 import net.alshanex.devilfruitsmod.entity.custom.FrozenEntity;
+import net.alshanex.devilfruitsmod.util.DFSpellAnimations;
 import net.alshanex.devilfruitsmod.util.DFUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,6 +41,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -121,6 +127,10 @@ public class IceAgeSpell extends AbstractSpell {
     }
 
     public void freezeAround(Level level, int spellLevel, LivingEntity entity, int radius) {
+        float particleRadius = entity.getBbWidth() + 1f;
+        MagicManager.spawnParticles(level, new BlastwaveParticleOptions(SchoolRegistry.ICE.get().getTargetingColor(), particleRadius), entity.getX(), entity.getY() + .165f, entity.getZ(), 1, 0, 0, 0, 0, true);
+        Messages.sendToPlayersTrackingEntity(new ClientboundParticleShockwave(new Vec3(entity.getX(), entity.getY() + .165f, entity.getZ()), particleRadius, ParticleRegistry.SNOWFLAKE_PARTICLE.get()), entity, true);
+
         level.getEntities(entity, entity.getBoundingBox().inflate(radius, 4, radius), (target) -> !DamageSources.isFriendlyFireBetween(target, entity) && Utils.hasLineOfSight(level, entity, target, true)).forEach(target -> {
             if (target instanceof LivingEntity livingEntity && livingEntity.distanceToSqr(entity) < radius * radius && !DamageSources.isFriendlyFireBetween(target, entity) && !(target instanceof FrozenEntity)) {
                 DamageSources.applyDamage(livingEntity, getDamage(spellLevel, entity), getDamageSource(entity));
@@ -208,7 +218,7 @@ public class IceAgeSpell extends AbstractSpell {
     }
 
     @Override
-    public AnimationHolder getCastFinishAnimation() {
-        return SpellAnimations.TOUCH_GROUND_ANIMATION;
+    public AnimationHolder getCastStartAnimation() {
+        return DFSpellAnimations.TOUCH_GROUND_ANIMATION;
     }
 }
