@@ -27,10 +27,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.MultifaceBlock;
-import net.minecraft.world.level.block.SnowLayerBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.EntityHitResult;
@@ -121,6 +118,7 @@ public class IceChamberSpell extends AbstractSpell {
             BlockPos center = target.blockPosition();
             Set<Block> excludedBlocks = DFUtils.nonFreezeableBlocks();
             Set<Block> iceableBlocks = DFUtils.iceableBlocks();
+            Set<Block> iceReplazableBlocks = DFUtils.iceReplazableBlocks();
 
             for (int x = (int) Math.floor(-radius); x <= Math.ceil(radius); x++) {
                 for (int y = -1; y <= 3; y++) {
@@ -134,7 +132,7 @@ public class IceChamberSpell extends AbstractSpell {
 
                         if (distance <= radius && !excludedBlocks.contains(blockState.getBlock()) &&
                                 blockState.getFluidState().getType() == Fluids.EMPTY && !blockState.isAir() &&
-                                !DFUtils.isIceOrSnow(blockState.getBlock())) {
+                                !DFUtils.isIceOrSnow(blockState.getBlock()) && !iceReplazableBlocks.contains(blockState.getBlock())) {
 
                             for (Direction direction : Direction.values()) {
                                 BlockPos adjacentPos = currentPos.relative(direction);
@@ -151,7 +149,9 @@ public class IceChamberSpell extends AbstractSpell {
                                 }
                             }
 
-                        } else if (distance <= radius && blockState.getBlock() == Blocks.WATER && !isAboveCenter) {
+                        } else if (distance <= radius
+                                && (blockState.getBlock() == Blocks.WATER || iceReplazableBlocks.contains(blockState.getBlock()))
+                                && !isAboveCenter) {
                             level.setBlockAndUpdate(currentPos, Blocks.ICE.defaultBlockState());
                         }  else if (distance <= radius && blockState.getBlock() == Blocks.LAVA && !isAboveCenter) {
                             level.setBlockAndUpdate(currentPos, Blocks.MAGMA_BLOCK.defaultBlockState());
@@ -163,6 +163,7 @@ public class IceChamberSpell extends AbstractSpell {
             BlockPos center = new BlockPos((int)hitResult.getLocation().x, (int)hitResult.getLocation().y, (int)hitResult.getLocation().z);
             Set<Block> excludedBlocks = DFUtils.nonFreezeableBlocks();
             Set<Block> iceableBlocks = DFUtils.iceableBlocks();
+            Set<Block> iceReplazableBlocks = DFUtils.iceReplazableBlocks();
 
             for (int x = (int) Math.floor(-radius); x <= Math.ceil(radius); x++) {
                 for (int y = -3; y <= 3; y++) {
@@ -176,7 +177,7 @@ public class IceChamberSpell extends AbstractSpell {
 
                         if (distance <= radius && !excludedBlocks.contains(blockState.getBlock()) &&
                                 blockState.getFluidState().getType() == Fluids.EMPTY && !blockState.isAir() &&
-                                !DFUtils.isIceOrSnow(blockState.getBlock())) {
+                                !DFUtils.isIceOrSnow(blockState.getBlock()) && !iceReplazableBlocks.contains(blockState.getBlock())) {
 
                             for (Direction direction : Direction.values()) {
                                 BlockPos adjacentPos = currentPos.relative(direction);
@@ -193,7 +194,9 @@ public class IceChamberSpell extends AbstractSpell {
                                 }
                             }
 
-                        } else if (distance <= radius && blockState.getBlock() == Blocks.WATER && !isAboveCenter) {
+                        } else if (distance <= radius
+                                && (blockState.getBlock() == Blocks.WATER || iceReplazableBlocks.contains(blockState.getBlock()))
+                                && !isAboveCenter) {
                             level.setBlockAndUpdate(currentPos, Blocks.ICE.defaultBlockState());
                         }  else if (distance <= radius && blockState.getBlock() == Blocks.LAVA && !isAboveCenter) {
                             level.setBlockAndUpdate(currentPos, Blocks.MAGMA_BLOCK.defaultBlockState());

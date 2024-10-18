@@ -21,14 +21,14 @@ public class DFUtils {
 
         for (Block block : ForgeRegistries.BLOCKS) {
             if (block instanceof TrapDoorBlock || block instanceof DoorBlock || block instanceof SignBlock || block instanceof BedBlock
-                    || block instanceof AbstractBannerBlock || block instanceof AbstractCandleBlock || block instanceof FenceBlock
+                    || block instanceof AbstractBannerBlock || block instanceof AbstractCandleBlock || block == Blocks.GLASS_PANE || block instanceof StainedGlassPaneBlock
                     || block instanceof AbstractChestBlock<?> || block instanceof BarrierBlock || block instanceof AbstractSkullBlock
                     || block instanceof CoralBlock || block instanceof CoralFanBlock || block instanceof CoralPlantBlock
                     || block instanceof CoralWallFanBlock || block instanceof PressurePlateBlock || block instanceof RailBlock
                     || block instanceof BeehiveBlock || block instanceof BellBlock || block instanceof BrewingStandBlock
                     || block instanceof ButtonBlock || block instanceof CampfireBlock || block instanceof ChorusPlantBlock
                     || block instanceof StructureBlock || block instanceof CakeBlock || block instanceof CommandBlock
-                    || block instanceof ShulkerBoxBlock || block instanceof EnchantmentTableBlock
+                    || block instanceof ShulkerBoxBlock || block instanceof EnchantmentTableBlock || block instanceof CactusBlock
                     || block instanceof BeaconBlock || block instanceof FlowerPotBlock || block instanceof EndGatewayBlock
                     || block instanceof EndPortalBlock || block instanceof EndRodBlock || block instanceof NetherPortalBlock
                     || block instanceof EndPortalFrameBlock || block instanceof RedStoneWireBlock || block instanceof HopperBlock
@@ -38,8 +38,7 @@ public class DFUtils {
                     || block instanceof WaterlilyBlock || block instanceof SculkShriekerBlock || block instanceof TripWireHookBlock
                     || block instanceof SculkSensorBlock || block instanceof DragonEggBlock || block instanceof TripWireBlock
                     || block instanceof TallSeagrassBlock || block instanceof  KelpPlantBlock || block instanceof TwistingVinesBlock
-                    || block instanceof BambooStalkBlock || block instanceof BambooSaplingBlock || block instanceof SugarCaneBlock
-                    || block instanceof CactusBlock || block instanceof SlabBlock || block instanceof StairBlock || block instanceof DirtPathBlock) {
+                    || block instanceof BambooStalkBlock || block instanceof BambooSaplingBlock || block instanceof SugarCaneBlock) {
                 excludedBlocks.add(block);
             }
         }
@@ -53,6 +52,18 @@ public class DFUtils {
         for (Block block : ForgeRegistries.BLOCKS) {
             if (block instanceof TorchBlock || block instanceof CarpetBlock || block instanceof SculkVeinBlock
                     || block instanceof BushBlock || block instanceof TallGrassBlock || block instanceof GlowLichenBlock) {
+                excludedBlocks.add(block);
+            }
+        }
+
+        return excludedBlocks;
+    }
+
+    public static Set<Block> iceReplazableBlocks(){
+        Set<Block> excludedBlocks = new HashSet<>();
+
+        for (Block block : ForgeRegistries.BLOCKS) {
+            if (block instanceof FenceBlock || block instanceof SlabBlock || block instanceof StairBlock || block instanceof DirtPathBlock) {
                 excludedBlocks.add(block);
             }
         }
