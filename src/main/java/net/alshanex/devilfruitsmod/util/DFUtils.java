@@ -21,7 +21,7 @@ public class DFUtils {
 
         for (Block block : ForgeRegistries.BLOCKS) {
             if (block instanceof TrapDoorBlock || block instanceof DoorBlock || block instanceof SignBlock || block instanceof BedBlock
-                    || block instanceof AbstractBannerBlock || block instanceof AbstractCandleBlock
+                    || block instanceof AbstractBannerBlock || block instanceof AbstractCandleBlock || block instanceof FenceBlock
                     || block instanceof AbstractChestBlock<?> || block instanceof BarrierBlock || block instanceof AbstractSkullBlock
                     || block instanceof CoralBlock || block instanceof CoralFanBlock || block instanceof CoralPlantBlock
                     || block instanceof CoralWallFanBlock || block instanceof PressurePlateBlock || block instanceof RailBlock
@@ -39,7 +39,7 @@ public class DFUtils {
                     || block instanceof SculkSensorBlock || block instanceof DragonEggBlock || block instanceof TripWireBlock
                     || block instanceof TallSeagrassBlock || block instanceof  KelpPlantBlock || block instanceof TwistingVinesBlock
                     || block instanceof BambooStalkBlock || block instanceof BambooSaplingBlock || block instanceof SugarCaneBlock
-                    || block instanceof CactusBlock) {
+                    || block instanceof CactusBlock || block instanceof SlabBlock || block instanceof StairBlock || block instanceof DirtPathBlock) {
                 excludedBlocks.add(block);
             }
         }
@@ -52,7 +52,7 @@ public class DFUtils {
 
         for (Block block : ForgeRegistries.BLOCKS) {
             if (block instanceof TorchBlock || block instanceof CarpetBlock || block instanceof SculkVeinBlock
-                    || block instanceof BushBlock || block instanceof TallGrassBlock) {
+                    || block instanceof BushBlock || block instanceof TallGrassBlock || block instanceof GlowLichenBlock) {
                 excludedBlocks.add(block);
             }
         }

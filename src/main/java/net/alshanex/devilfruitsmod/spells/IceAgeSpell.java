@@ -10,17 +10,15 @@ import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.damage.SpellDamageSource;
-import io.redspace.ironsspellbooks.entity.mobs.frozen_humanoid.FrozenHumanoid;
-import io.redspace.ironsspellbooks.network.spell.ClientboundFrostStepParticles;
-import io.redspace.ironsspellbooks.network.spell.ClientboundParticleShockwave;
-import io.redspace.ironsspellbooks.particle.BlastwaveParticleOptions;
+import io.redspace.ironsspellbooks.entity.spells.AbstractConeProjectile;
+import io.redspace.ironsspellbooks.entity.spells.cone_of_cold.ConeOfColdProjectile;
 import io.redspace.ironsspellbooks.registries.MobEffectRegistry;
-import io.redspace.ironsspellbooks.registries.ParticleRegistry;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
-import io.redspace.ironsspellbooks.setup.Messages;
+import io.redspace.ironsspellbooks.spells.EntityCastData;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.alshanex.devilfruitsmod.block.ModBlocks;
 import net.alshanex.devilfruitsmod.datagen.EntityTagGenerator;
+import net.alshanex.devilfruitsmod.entity.ModEntities;
 import net.alshanex.devilfruitsmod.entity.custom.FrozenEntity;
 import net.alshanex.devilfruitsmod.util.DFUtils;
 import net.minecraft.core.BlockPos;
@@ -32,12 +30,14 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.MultifaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -48,32 +48,37 @@ import java.util.Set;
 public class IceAgeSpell extends AbstractSpell {
     private final ResourceLocation spellId = new ResourceLocation(IronsSpellbooks.MODID, "ice_age");
 
+    private int initialRadius = 0;
+
     @Override
     public List<MutableComponent> getUniqueInfo(int spellLevel, LivingEntity caster) {
-        return List.of(
-                Component.translatable("ui.irons_spellbooks.damage", Utils.stringTruncation(getDamage(spellLevel, caster), 2)),
-                Component.translatable("ui.irons_spellbooks.radius", Utils.stringTruncation(getRadius(spellLevel, caster), 2))
-        );
+        return List.of(Component.translatable("ui.irons_spellbooks.damage", Utils.stringTruncation(getDamage(spellLevel, caster), 2)),
+                Component.translatable("ui.irons_spellbooks.radius", Utils.stringTruncation(getRadius(spellLevel, caster), 2)));
     }
 
     private final DefaultConfig defaultConfig = new DefaultConfig()
-            .setMinRarity(SpellRarity.LEGENDARY)
+            .setMinRarity(SpellRarity.COMMON)
             .setSchoolResource(SchoolRegistry.ICE_RESOURCE)
-            .setMaxLevel(1)
-            .setCooldownSeconds(60)
+            .setMaxLevel(10)
+            .setCooldownSeconds(20)
             .build();
 
     public IceAgeSpell() {
-        this.manaCostPerLevel = 5;
-        this.baseSpellPower = 10;
-        this.spellPowerPerLevel = 3;
-        this.castTime = 20;
-        this.baseManaCost = 150;
+        this.manaCostPerLevel = 1;
+        this.baseSpellPower = 5;
+        this.spellPowerPerLevel = 1;
+        this.castTime = 60 - 5;
+        this.baseManaCost = 5;
+    }
+
+    @Override
+    public int getCastTime(int spellLevel) {
+        return castTime + 5 * spellLevel;
     }
 
     @Override
     public CastType getCastType() {
-        return CastType.LONG;
+        return CastType.CONTINUOUS;
     }
 
     @Override
@@ -88,18 +93,39 @@ public class IceAgeSpell extends AbstractSpell {
 
     @Override
     public Optional<SoundEvent> getCastStartSound() {
-        return Optional.of(SoundRegistry.FROSTWAVE_PREPARE.get());
+        return Optional.empty();
     }
 
     @Override
-    public void onCast(Level level, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) {
-        float radius = getRadius(spellLevel, entity);
-        MagicManager.spawnParticles(level, new BlastwaveParticleOptions(SchoolRegistry.ICE.get().getTargetingColor(), radius), entity.getX(), entity.getY() + .165f, entity.getZ(), 1, 0, 0, 0, 0, true);
-        Messages.sendToPlayersTrackingEntity(new ClientboundParticleShockwave(new Vec3(entity.getX(), entity.getY() + .165f, entity.getZ()), radius, ParticleRegistry.SNOWFLAKE_PARTICLE.get()), entity, true);
+    public Optional<SoundEvent> getCastFinishSound() {
+        return Optional.of(SoundRegistry.CONE_OF_COLD_LOOP.get());
+    }
+
+    @Override
+    public void onCast(Level world, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) {
+        super.onCast(world, spellLevel, entity, castSource, playerMagicData);
+    }
+
+    @Override
+    public void onServerCastTick(Level level, int spellLevel, LivingEntity entity, @Nullable MagicData playerMagicData) {
+        if (playerMagicData != null && (playerMagicData.getCastDurationRemaining() + 1) % 10 == 0) {
+            initialRadius+=2;
+            if(initialRadius <= getRadius(spellLevel, entity)){
+                freezeAround(level, spellLevel, entity, initialRadius);
+            }
+        }
+    }
+
+    @Override
+    public void onServerCastComplete(Level level, int spellLevel, LivingEntity entity, MagicData playerMagicData, boolean cancelled) {
+        initialRadius = 0;
+        super.onServerCastComplete(level, spellLevel, entity, playerMagicData, cancelled);
+    }
+
+    public void freezeAround(Level level, int spellLevel, LivingEntity entity, int radius) {
         level.getEntities(entity, entity.getBoundingBox().inflate(radius, 4, radius), (target) -> !DamageSources.isFriendlyFireBetween(target, entity) && Utils.hasLineOfSight(level, entity, target, true)).forEach(target -> {
-            if (target instanceof LivingEntity livingEntity && livingEntity.distanceToSqr(entity) < radius * radius && !DamageSources.isFriendlyFireBetween(target, entity)) {
+            if (target instanceof LivingEntity livingEntity && livingEntity.distanceToSqr(entity) < radius * radius && !DamageSources.isFriendlyFireBetween(target, entity) && !(target instanceof FrozenEntity)) {
                 DamageSources.applyDamage(livingEntity, getDamage(spellLevel, entity), getDamageSource(entity));
-                livingEntity.addEffect(new MobEffectInstance(MobEffectRegistry.CHILLED.get(), getDuration(spellLevel, entity)));
                 MagicManager.spawnParticles(level, ParticleHelper.SNOWFLAKE, livingEntity.getX(), livingEntity.getY() + livingEntity.getBbHeight() * .5f, livingEntity.getZ(), 50, livingEntity.getBbWidth() * .5f, livingEntity.getBbHeight() * .5f, livingEntity.getBbWidth() * .5f, .03, false);
 
                 if((livingEntity.getHealth() < (livingEntity.getMaxHealth() * 0.1) || livingEntity.getHealth() <= getDamage(spellLevel, entity))){
@@ -123,7 +149,7 @@ public class IceAgeSpell extends AbstractSpell {
         Set<Block> iceableBlocks = DFUtils.iceableBlocks();
 
         for (int x = (int) Math.floor(-radius); x <= Math.ceil(radius); x++) {
-            for (int y = -3; y <= 5; y++) {
+            for (int y = -6; y <= 6; y++) {
                 for (int z = (int) Math.floor(-radius); z <= Math.ceil(radius); z++) {
                     BlockPos currentPos = center.offset(x, y, z);
                     var blockState = level.getBlockState(currentPos);
@@ -159,30 +185,25 @@ public class IceAgeSpell extends AbstractSpell {
                 }
             }
         }
-
-        super.onCast(level, spellLevel, entity, castSource, playerMagicData);
     }
 
-    public float getRadius(int spellLevel, LivingEntity caster) {
-        return 6 + spellLevel * 10 * .75f;
-    }
 
     @Override
     public SpellDamageSource getDamageSource(@Nullable Entity projectile, Entity attacker) {
-        return super.getDamageSource(projectile, attacker).setFreezeTicks(100);
+        return super.getDamageSource(projectile, attacker).setFreezeTicks(80);
     }
 
-    private float getDamage(int spellLevel, LivingEntity caster) {
-        return this.getSpellPower(spellLevel, caster) * 0.6f;
+    public float getDamage(int spellLevel, LivingEntity caster) {
+        return 1 + getSpellPower(spellLevel, caster) * .4f;
     }
 
-    public int getDuration(int spellLevel, LivingEntity caster) {
-        return (int) (getSpellPower(spellLevel, caster) * 20);
+    public float getRadius(int spellLevel, LivingEntity caster) {
+        return 6 + spellLevel * 2 * .75f;
     }
 
     @Override
-    public AnimationHolder getCastStartAnimation() {
-        return SpellAnimations.CHARGE_RAISED_HAND;
+    public boolean shouldAIStopCasting(int spellLevel, Mob mob, LivingEntity target) {
+        return mob.distanceToSqr(target) > (10 * 10) * 1.2;
     }
 
     @Override

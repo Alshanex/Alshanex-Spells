@@ -23,7 +23,6 @@ import java.util.concurrent.CompletableFuture;
 
 public class EntityTagGenerator extends EntityTypeTagsProvider {
     public static TagKey<EntityType<?>> FREEZEABLE_ENTITIES = createKey("freezeable_entities");
-    public static TagKey<EntityType<?>> NON_FREEZEABLE_ENTITIES = createKey("non_freezeable_entities");
 
     public EntityTagGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable final ExistingFileHelper existingFileHelper) {
         super(output, provider, DevilFruitsMod.MOD_ID, existingFileHelper);
@@ -36,6 +35,10 @@ public class EntityTagGenerator extends EntityTypeTagsProvider {
                 .filter(entityType -> !entityType.getBaseClass().isAssignableFrom(MagicSummon.class))
                 .filter(entityType -> !DFUtils.isNonFreezeable(entityType))
                 .forEach(entityType -> tag(FREEZEABLE_ENTITIES).add(entityType));
+
+        tag(FREEZEABLE_ENTITIES)
+                .add(EntityType.VILLAGER)
+                .add(EntityType.IRON_GOLEM);
     }
 
     private static TagKey<EntityType<?>> createKey(final String name) {
