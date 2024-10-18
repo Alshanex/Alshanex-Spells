@@ -5,15 +5,18 @@ import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
 import io.redspace.ironsspellbooks.api.spells.*;
+import io.redspace.ironsspellbooks.api.util.AnimationHolder;
 import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.entity.spells.fire_breath.FireBreathProjectile;
 import io.redspace.ironsspellbooks.entity.spells.fireball.MagicFireball;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import net.alshanex.devilfruitsmod.entity.custom.HikenEntity;
+import net.alshanex.devilfruitsmod.util.DFSpellAnimations;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -69,6 +72,11 @@ public class HikenSpell extends AbstractSpell {
     }
 
     @Override
+    public Optional<SoundEvent> getCastFinishSound() {
+        return Optional.of(SoundEvents.BLAZE_SHOOT);
+    }
+
+    @Override
     public void onCast(Level world, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) {
         Vec3 origin = entity.getEyePosition();
         Vec3 forward = entity.getForward();
@@ -97,5 +105,15 @@ public class HikenSpell extends AbstractSpell {
 
     public int getRadius(int spellLevel, LivingEntity caster) {
         return 2 + (int) getSpellPower(spellLevel, caster);
+    }
+
+    @Override
+    public AnimationHolder getCastStartAnimation() {
+        return DFSpellAnimations.FIST_START_ANIMATION;
+    }
+
+    @Override
+    public AnimationHolder getCastFinishAnimation() {
+        return DFSpellAnimations.FIST_RELEASE_ANIMATION;
     }
 }

@@ -26,12 +26,15 @@ import net.alshanex.devilfruitsmod.entity.ModEntities;
 import net.alshanex.devilfruitsmod.entity.custom.FrozenEntity;
 import net.alshanex.devilfruitsmod.util.DFSpellAnimations;
 import net.alshanex.devilfruitsmod.util.DFUtils;
+import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -47,6 +50,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static io.redspace.ironsspellbooks.api.util.Utils.random;
 
 @AutoSpellConfig
 public class IceAgeSpell extends AbstractSpell {
@@ -117,6 +122,11 @@ public class IceAgeSpell extends AbstractSpell {
             if(initialRadius <= getRadius(spellLevel, entity)){
                 freezeAround(level, spellLevel, entity, initialRadius);
             }
+        }
+
+        if (playerMagicData != null && (playerMagicData.getCastDurationRemaining() + 1) > 20 && (playerMagicData.getCastDurationRemaining() + 1) % 20 == 0) {
+            Vec3 targetArea = entity.position();
+            level.playSound(null, targetArea.x, targetArea.y, targetArea.z, SoundRegistry.ICE_BLOCK_CAST.get(), SoundSource.PLAYERS, 2, random.nextIntBetweenInclusive(8, 12) * .1f);
         }
     }
 

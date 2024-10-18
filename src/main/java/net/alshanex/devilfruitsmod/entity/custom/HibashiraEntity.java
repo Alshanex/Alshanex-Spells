@@ -89,14 +89,7 @@ public class HibashiraEntity extends AoeEntity {
                 entity.fallDistance = 0;
             }
         }
-        if (!level().isClientSide) {
-            if ((tickCount - 1) % loopSoundDurationInTicks == 0) {
-                this.playSound(SoundRegistry.FIRE_BREATH_LOOP.get(), getRadius(), 1);
-            }
-        }
     }
-
-    private static final int loopSoundDurationInTicks = 200;
 
     private void updateTrackingEntities() {
         trackingEntities = level().getEntities(this, this.getBoundingBox().inflate(this.getBbWidth() * 3, 15, this.getBbWidth() * 3));

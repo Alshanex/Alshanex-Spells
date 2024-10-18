@@ -5,6 +5,7 @@ import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
 import io.redspace.ironsspellbooks.api.spells.*;
+import io.redspace.ironsspellbooks.api.util.AnimationHolder;
 import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
 import io.redspace.ironsspellbooks.damage.DamageSources;
@@ -60,13 +61,13 @@ public class IceChamberSpell extends AbstractSpell {
         this.manaCostPerLevel = 15;
         this.baseSpellPower = 6;
         this.spellPowerPerLevel = 1;
-        this.castTime = 0;
+        this.castTime = 20;
         this.baseManaCost = 25;
     }
 
     @Override
     public CastType getCastType() {
-        return CastType.INSTANT;
+        return CastType.LONG;
     }
 
     @Override
@@ -219,5 +220,10 @@ public class IceChamberSpell extends AbstractSpell {
 
     private int getFreezeTime(int spellLevel, LivingEntity caster) {
         return (int) (getSpellPower(spellLevel, caster) * 15);
+    }
+
+    @Override
+    public AnimationHolder getCastStartAnimation() {
+        return SpellAnimations.ANIMATION_CHARGED_CAST;
     }
 }

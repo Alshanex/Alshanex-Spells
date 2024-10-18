@@ -20,6 +20,7 @@ import io.redspace.ironsspellbooks.setup.Messages;
 import io.redspace.ironsspellbooks.spells.TargetAreaCastData;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.alshanex.devilfruitsmod.entity.custom.HibashiraEntity;
+import net.alshanex.devilfruitsmod.util.DFSpellAnimations;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -65,14 +66,19 @@ public class HibashiraSpell extends AbstractSpell {
         this.manaCostPerLevel = 5;
         this.baseSpellPower = 8;
         this.spellPowerPerLevel = 1;
-        this.castTime = 20;
+        this.castTime = 50 - 5;
         this.baseManaCost = 100;
 
     }
 
     @Override
+    public int getCastTime(int spellLevel) {
+        return (castTime + 5 * spellLevel) * 2;
+    }
+
+    @Override
     public CastType getCastType() {
-        return CastType.LONG;
+        return CastType.CONTINUOUS;
     }
 
     @Override
@@ -91,56 +97,74 @@ public class HibashiraSpell extends AbstractSpell {
     }
 
     @Override
-    public boolean checkPreCastConditions(Level level, int spellLevel, LivingEntity entity, MagicData playerMagicData) {
-        float radius = getRadius(entity);
-        var area = TargetedAreaEntity.createTargetAreaEntity(level, entity.position(), radius, Utils.packRGB(this.getTargetingColor()));
-        playerMagicData.setAdditionalCastData(new TargetAreaCastData(entity.position(), area));
-        return true;
-    }
-
-    @Override
     public void onCast(Level level, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) {
-        if (playerMagicData.getAdditionalCastData() instanceof TargetAreaCastData castData) {
-            Vec3 targetArea = castData.getCenter();
-            level.playSound(null, targetArea.x, targetArea.y, targetArea.z, SoundRegistry.FIRE_CAST.get(), SoundSource.PLAYERS, 2, random.nextIntBetweenInclusive(8, 12) * .1f);
-            var radius = castData.getCastingEntity().getRadius();
-            var radiusSqr = radius * radius;
-            var damage = getDamage(spellLevel, entity);
-            var source = getDamageSource(entity);
-            level.getEntitiesOfClass(LivingEntity.class, new AABB(targetArea.subtract(radius, radius, radius), targetArea.add(radius, radius, radius)),
-                            livingEntity -> livingEntity != entity &&
-                                    horizontalDistanceSqr(livingEntity, targetArea) < radiusSqr &&
-                                    livingEntity.isPickable() &&
-                                    !DamageSources.isFriendlyFireBetween(livingEntity, entity) &&
-                                    Utils.hasLineOfSight(level, targetArea.add(0, 1.5, 0), livingEntity.getBoundingBox().getCenter(), true))
-                    .forEach(livingEntity -> {
-                        DamageSources.applyDamage(livingEntity, damage, source);
-                        DamageSources.ignoreNextKnockback(livingEntity);
-                    });
+        Vec3 targetArea = entity.position();
+        float radius = getRadius(entity);
+        var radiusSqr = radius * radius;
+        var damage = getDamage(spellLevel, entity);
+        var source = getDamageSource(entity);
+        level.getEntitiesOfClass(LivingEntity.class, new AABB(targetArea.subtract(radius, radius, radius), targetArea.add(radius, radius, radius)),
+                        livingEntity -> livingEntity != entity &&
+                                horizontalDistanceSqr(livingEntity, targetArea) < radiusSqr &&
+                                livingEntity.isPickable() &&
+                                !DamageSources.isFriendlyFireBetween(livingEntity, entity) &&
+                                Utils.hasLineOfSight(level, targetArea.add(0, 1.5, 0), livingEntity.getBoundingBox().getCenter(), true))
+                .forEach(livingEntity -> {
+                    DamageSources.applyDamage(livingEntity, damage, source);
+                    DamageSources.ignoreNextKnockback(livingEntity);
+                });
 
-            MagicManager.spawnParticles(level, new BlastwaveParticleOptions(SchoolRegistry.FIRE.get().getTargetingColor(), radius * 2), entity.getX(), entity.getY() + .165f, entity.getZ(), 1, 0, 0, 0, 0, true);
-            Messages.sendToPlayersTrackingEntity(new ClientboundParticleShockwave(new Vec3(entity.getX(), entity.getY() + .165f, entity.getZ()), radius * 2, ParticleRegistry.FIRE_PARTICLE.get()), entity, true);
-            level.getEntities(entity, entity.getBoundingBox().inflate(radius * 2, 4, radius * 2), (target) -> !DamageSources.isFriendlyFireBetween(target, entity) && Utils.hasLineOfSight(level, entity, target, true)).forEach(target -> {
-                if (target instanceof LivingEntity livingEntity && livingEntity.distanceToSqr(entity) < (radius * 2) * (radius * 2)) {
-                    livingEntity.setSecondsOnFire(10);
-                    MagicManager.spawnParticles(level, ParticleHelper.EMBERS, livingEntity.getX(), livingEntity.getY() + livingEntity.getBbHeight() * .5f, livingEntity.getZ(), 50, livingEntity.getBbWidth() * .5f, livingEntity.getBbHeight() * .5f, livingEntity.getBbWidth() * .5f, .03, false);
-                }
-            });
-
-            HibashiraEntity fire = new HibashiraEntity(level);
-            fire.setOwner(entity);
-            fire.setDuration(200);
-            fire.setDamage(damage * .1f);
-            fire.setRadius(radius);
-            fire.setCircular();
-            fire.moveTo(targetArea.x, targetArea.y, targetArea.z);
-            level.addFreshEntity(fire);
-        }
+        HibashiraEntity fire = new HibashiraEntity(level);
+        fire.setOwner(entity);
+        fire.setDuration(200);
+        fire.setDamage(damage * .1f);
+        fire.setRadius(radius);
+        fire.setCircular();
+        fire.moveTo(targetArea.x, targetArea.y, targetArea.z);
+        level.addFreshEntity(fire);
 
         super.onCast(level, spellLevel, entity, castSource, playerMagicData);
     }
 
+    @Override
+    public void onServerCastTick(Level level, int spellLevel, LivingEntity entity, @Nullable MagicData playerMagicData) {
+        var radius = getRadius(entity);
+        Vec3 targetArea = entity.position();
+
+        if (playerMagicData != null && (playerMagicData.getCastDurationRemaining() + 1) % 20 == 0) {
+            level.playSound(null, targetArea.x, targetArea.y, targetArea.z, SoundRegistry.FIRE_CAST.get(), SoundSource.PLAYERS, 2, random.nextIntBetweenInclusive(8, 12) * .1f);
+        }
+
+        if (playerMagicData != null && (playerMagicData.getCastDurationRemaining() + 1) % 40 == 0) {
+            MagicManager.spawnParticles(level, new BlastwaveParticleOptions(SchoolRegistry.FIRE.get().getTargetingColor(), radius * 2), entity.getX(), entity.getY() + .165f, entity.getZ(), 1, 0, 0, 0, 0, true);
+            Messages.sendToPlayersTrackingEntity(new ClientboundParticleShockwave(new Vec3(entity.getX(), entity.getY() + .165f, entity.getZ()), radius * 2, ParticleRegistry.FIRE_PARTICLE.get()), entity, true);
+            level.getEntities(entity, entity.getBoundingBox().inflate(radius * 2, 4, radius * 2), (target) -> !DamageSources.isFriendlyFireBetween(target, entity) && Utils.hasLineOfSight(level, entity, target, true)).forEach(target -> {
+                if (target instanceof LivingEntity livingEntity && livingEntity.distanceToSqr(entity) < (radius * 2) * (radius * 2)) {
+                    livingEntity.setSecondsOnFire(5);
+                    MagicManager.spawnParticles(level, ParticleHelper.EMBERS, livingEntity.getX(), livingEntity.getY() + livingEntity.getBbHeight() * .5f, livingEntity.getZ(), 50, livingEntity.getBbWidth() * .5f, livingEntity.getBbHeight() * .5f, livingEntity.getBbWidth() * .5f, .03, false);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onServerCastComplete(Level level, int spellLevel, LivingEntity entity, MagicData playerMagicData, boolean cancelled) {
+        level.getEntitiesOfClass(HibashiraEntity.class, new AABB(entity.position().subtract(10, 10, 10), entity.position().add(10, 10, 10)),
+                        hibashiraEntity -> horizontalDistanceSqrHibashira(hibashiraEntity, entity.position()) < 100 &&
+                                hibashiraEntity.getOwner() == entity)
+                .forEach(hibashiraEntity -> {
+                    hibashiraEntity.remove(Entity.RemovalReason.DISCARDED);
+                });
+        super.onServerCastComplete(level, spellLevel, entity, playerMagicData, cancelled);
+    }
+
     private float horizontalDistanceSqr(LivingEntity livingEntity, Vec3 vec3) {
+        var dx = livingEntity.getX() - vec3.x;
+        var dz = livingEntity.getZ() - vec3.z;
+        return (float) (dx * dx + dz * dz);
+    }
+
+    private float horizontalDistanceSqrHibashira(HibashiraEntity livingEntity, Vec3 vec3) {
         var dx = livingEntity.getX() - vec3.x;
         var dz = livingEntity.getZ() - vec3.z;
         return (float) (dx * dx + dz * dz);
@@ -161,11 +185,6 @@ public class HibashiraSpell extends AbstractSpell {
 
     @Override
     public AnimationHolder getCastStartAnimation() {
-        return SpellAnimations.CHARGE_RAISED_HAND;
-    }
-
-    @Override
-    public AnimationHolder getCastFinishAnimation() {
-        return SpellAnimations.ANIMATION_INSTANT_CAST;
+        return DFSpellAnimations.HIBASHIRA_ANIMATION;
     }
 }
