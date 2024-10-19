@@ -112,13 +112,6 @@ public class ModEvents {
         }
 
         @SubscribeEvent
-        public static  void onCurioUnequip(CurioUnequipEvent event){
-            if(event.getStack().is(ModItems.MERAMERA.get()) || event.getStack().is(ModItems.HIEHIE.get())){
-                event.setResult(Event.Result.DENY);
-            }
-        }
-
-        @SubscribeEvent
         public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
             if (event.player.hasEffect(ModEffects.ICE_LOGIA_EFFECT.get())) {
                 Level world = event.player.level();

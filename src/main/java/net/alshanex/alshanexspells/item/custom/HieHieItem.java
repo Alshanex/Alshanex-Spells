@@ -18,7 +18,7 @@ public class HieHieItem extends UniqueSpellBook {
         super(SpellRarity.LEGENDARY, SpellDataRegistryHolder.of(
                 new SpellDataRegistryHolder(ExampleSpellRegistry.ICE_CHAMBER, 5),
                 new SpellDataRegistryHolder(ExampleSpellRegistry.ICE_AGE, 1)
-        ), 6, () -> {
+        ), 0, () -> {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
             builder.put(AttributeRegistry.ICE_SPELL_POWER.get(), new AttributeModifier(UUID.fromString("667ad88f-901d-4691-b2a2-3664e42026d3"), "Weapon modifier", .10, AttributeModifier.Operation.MULTIPLY_BASE));
             builder.put(AttributeRegistry.MAX_MANA.get(), new AttributeModifier(UUID.fromString("667ad88f-901d-4691-b2a2-3664e42026d3"), "Weapon modifier", 200, AttributeModifier.Operation.ADDITION));
