@@ -30,7 +30,7 @@ public class HikenSpell extends AbstractSpell {
     @Override
     public List<MutableComponent> getUniqueInfo(int spellLevel, LivingEntity caster) {
         return List.of(
-                Component.translatable("ui.irons_spellbooks.damage", Utils.stringTruncation(getDamage(spellLevel, caster), 2))
+                Component.translatable("ui.irons_spellbooks.damage", Utils.stringTruncation(getDamage(spellLevel, caster) / 3, 2))
         );
     }
 
@@ -86,7 +86,7 @@ public class HikenSpell extends AbstractSpell {
 
         for (int i = 0; i < numberOfEntities; i++) {
             HikenEntity fireball = new HikenEntity(world, entity);
-            fireball.setDamage(getDamage(spellLevel, entity));
+            fireball.setDamage(getDamage(spellLevel, entity) / 3);
             fireball.setExplosionRadius(getRadius(spellLevel, entity));
 
             fireball.setPos(origin.add(forward.scale(0.5)).add(right.scale(offset * i)).subtract(0, fireball.getBbHeight() / 2, 0));

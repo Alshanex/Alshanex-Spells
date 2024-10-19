@@ -118,9 +118,9 @@ public class HikenEntity extends AbstractMagicProjectile {
     }
 
     private void createParticleSphere() {
-        double radius = this.getBbWidth()+1;
+        double radius = this.getBbWidth() + 1;
 
-        int particleCount = 100;
+        int particleCount = 50;
         for (int i = 0; i < particleCount; i++) {
             double theta = Math.toRadians(this.level().random.nextDouble() * 360);
             double phi = Math.toRadians(this.level().random.nextDouble() * 180);
