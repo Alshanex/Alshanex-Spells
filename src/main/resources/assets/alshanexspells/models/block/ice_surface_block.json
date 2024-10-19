@@ -2,7 +2,7 @@
   "ambientocclusion": false,
   "textures": {
     "particle": "block/ice",
-    "ice_surface_block": "devilfruitsmod:block/ice_surface_block"
+    "ice_surface_block": "alshanexspells:block/ice_surface_block"
   },
   "elements": [
     {   "from": [ 0, 0, 0.1 ],

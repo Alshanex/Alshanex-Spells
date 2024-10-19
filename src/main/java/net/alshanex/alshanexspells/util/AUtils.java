@@ -1,13 +1,18 @@
 package net.alshanex.alshanexspells.util;
 
+import io.redspace.ironsspellbooks.compat.Curios;
 import io.redspace.ironsspellbooks.registries.EntityRegistry;
 import net.alshanex.alshanexspells.block.ModBlocks;
 import net.alshanex.alshanexspells.entity.ModEntities;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.*;
 import net.minecraftforge.registries.ForgeRegistries;
+import top.theillusivec4.curios.api.CuriosApi;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -72,6 +77,19 @@ public class AUtils {
     public static boolean isIceOrSnow(Block block) {
         return block instanceof IceBlock || block instanceof SnowLayerBlock
                 || block instanceof PowderSnowBlock || block == ModBlocks.ICE_SURFACE_BLOCK.get();
+    }
+
+    public static boolean hasItemInSpellbookSlot(ServerPlayer player, Item itemToCheck) {
+        return CuriosApi.getCuriosInventory(player).map(inventory ->
+                inventory.getStacksHandler(Curios.SPELLBOOK_SLOT).map(stacksHandler -> {
+                    for (int i = 0; i < stacksHandler.getSlots(); i++) {
+                        if (stacksHandler.getStacks().getStackInSlot(i).is(itemToCheck)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }).orElse(false)
+        ).orElse(false);
     }
 
     public static boolean isNonFreezeable(EntityType type) {

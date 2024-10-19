@@ -2,14 +2,12 @@ package net.alshanex.alshanexspells.event;
 
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
-import io.redspace.ironsspellbooks.compat.Curios;
 import io.redspace.ironsspellbooks.entity.mobs.frozen_humanoid.FrozenHumanoid;
 import io.redspace.ironsspellbooks.network.ClientboundSyncMana;
 import io.redspace.ironsspellbooks.setup.Messages;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.alshanex.alshanexspells.AlshanexSpellsMod;
 import net.alshanex.alshanexspells.block.ModBlocks;
-import net.alshanex.alshanexspells.effect.ModEffects;
 import net.alshanex.alshanexspells.item.ModItems;
 import net.alshanex.alshanexspells.util.AUtils;
 import net.minecraft.core.BlockPos;
@@ -17,6 +15,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -26,11 +25,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import top.theillusivec4.curios.api.event.CurioChangeEvent;
-import top.theillusivec4.curios.api.event.CurioUnequipEvent;
 
 public class ModEvents {
     @Mod.EventBusSubscriber(modid = AlshanexSpellsMod.MOD_ID)
@@ -39,7 +35,7 @@ public class ModEvents {
         public static void onProjectileImpact(ProjectileImpactEvent event) {
             if (event.getRayTraceResult() instanceof EntityHitResult entityHitResult) {
                 if (entityHitResult.getEntity() instanceof ServerPlayer player) {
-                    if (player.hasEffect(ModEffects.MERA_LOGIA_EFFECT.get())) {
+                    if (AUtils.hasItemInSpellbookSlot(player, ModItems.MERAMERA.get())) {
                         event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
                         if (player.level() instanceof ServerLevel serverLevel) {
 
@@ -71,7 +67,7 @@ public class ModEvents {
         public static void onEntityAttacked(LivingHurtEvent event) {
             if (event.getEntity() instanceof ServerPlayer player) {
                 MagicData magicData = MagicData.getPlayerMagicData(player);
-                if (player.hasEffect(ModEffects.ICE_LOGIA_EFFECT.get()) && magicData.getMana() >= 20 && !(AUtils.isFireDamage(event.getSource().type()))) {
+                if(AUtils.hasItemInSpellbookSlot(player, ModItems.HIEHIE.get()) && magicData.getMana() >= 20 && !(AUtils.isFireDamage(event.getSource().type()))){
                     BlockPos currentBlockPos = player.blockPosition();
                     BlockPos blockBelowPos = player.blockPosition().below();
                     Block blockBelow = player.level().getBlockState(blockBelowPos).getBlock();
@@ -101,30 +97,25 @@ public class ModEvents {
         }
 
         @SubscribeEvent
-        public static  void onCurioChange(CurioChangeEvent event){
-            if(event.getIdentifier().equals(Curios.SPELLBOOK_SLOT)){
-                if(event.getTo().is(ModItems.MERAMERA.get())) {
-                    event.getEntity().addEffect(new MobEffectInstance(ModEffects.MERA_LOGIA_EFFECT.get(), Integer.MAX_VALUE, 0, false, false));
-                } else if(event.getTo().is(ModItems.HIEHIE.get())) {
-                    event.getEntity().addEffect(new MobEffectInstance(ModEffects.ICE_LOGIA_EFFECT.get(), Integer.MAX_VALUE, 0, false, false));
-                }
-            }
-        }
-
-        @SubscribeEvent
         public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-            if (event.player.hasEffect(ModEffects.ICE_LOGIA_EFFECT.get())) {
-                Level world = event.player.level();
+            if(event.player instanceof ServerPlayer player){
+                if(AUtils.hasItemInSpellbookSlot(player, ModItems.MERAMERA.get())){
+                    player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 2, 0, false, false));
+                }
 
-                BlockPos playerPos = event.player.blockPosition();
+                if (AUtils.hasItemInSpellbookSlot(player, ModItems.HIEHIE.get())) {
+                    Level world = event.player.level();
 
-                if (event.player.onGround()) {
-                    int radius = 2;
-                    for (BlockPos blockPos : BlockPos.betweenClosed(playerPos.offset(-radius, -1, -radius), playerPos.offset(radius, -1, radius))) {
-                        BlockState blockState = world.getBlockState(blockPos);
-                        if (blockState.getBlock() == Blocks.WATER) {
-                            world.setBlockAndUpdate(blockPos, Blocks.FROSTED_ICE.defaultBlockState());
-                            world.scheduleTick(blockPos, Blocks.FROSTED_ICE, 120);
+                    BlockPos playerPos = event.player.blockPosition();
+
+                    if (event.player.onGround()) {
+                        int radius = 2;
+                        for (BlockPos blockPos : BlockPos.betweenClosed(playerPos.offset(-radius, -1, -radius), playerPos.offset(radius, -1, radius))) {
+                            BlockState blockState = world.getBlockState(blockPos);
+                            if (blockState.getBlock() == Blocks.WATER) {
+                                world.setBlockAndUpdate(blockPos, Blocks.FROSTED_ICE.defaultBlockState());
+                                world.scheduleTick(blockPos, Blocks.FROSTED_ICE, 120);
+                            }
                         }
                     }
                 }
