@@ -1,0 +1,17 @@
+{
+  "effect.alshanexspells.mera_logia": "Logia (Fire)",
+  "item.alshanexspells.meramerafruit": "Fire Fruit",
+
+  "effect.alshanexspells.ice_logia": "Logia (Ice)",
+  "item.alshanexspells.hiehiefruit": "Ice Fruit",
+
+  "spell.irons_spellbooks.hiken": "Fire Fist",
+  "spell.irons_spellbooks.hibashira": "Fire Pilar",
+  "spell.irons_spellbooks.ice_chamber": "Ice Chamber",
+  "spell.irons_spellbooks.ice_age": "Ice Age",
+
+  "spell.irons_spellbooks.hiken.guide": "Strike with a powerful fire fist burning everything in the way.",
+  "spell.irons_spellbooks.hibashira.guide": "Summon a fire pilar to burn and hurt your enemies.",
+  "spell.irons_spellbooks.ice_chamber.guide": "Shoot a freezing ray that will freeze an area around the impact and sometimes even the enemy itself.",
+  "spell.irons_spellbooks.ice_age.guide": "Freeze everything around you, covering the world in ice."
+}
