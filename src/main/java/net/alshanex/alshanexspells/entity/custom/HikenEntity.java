@@ -120,7 +120,7 @@ public class HikenEntity extends AbstractMagicProjectile {
     private void createParticleSphere() {
         double radius = this.getBbWidth() + 1;
 
-        int particleCount = 50;
+        int particleCount = 15;
         for (int i = 0; i < particleCount; i++) {
             double theta = Math.toRadians(this.level().random.nextDouble() * 360);
             double phi = Math.toRadians(this.level().random.nextDouble() * 180);
@@ -131,7 +131,7 @@ public class HikenEntity extends AbstractMagicProjectile {
             double yOffset = randomRadius * Math.cos(phi);
             double zOffset = randomRadius * Math.sin(phi) * Math.sin(theta);
 
-            this.level().addParticle(ParticleTypes.FLAME,
+            this.level().addParticle(ParticleHelper.FIRE,
                     this.getX() + xOffset,
                     this.getY() + yOffset,
                     this.getZ() + zOffset,

@@ -8,6 +8,7 @@ import io.redspace.ironsspellbooks.api.spells.*;
 import io.redspace.ironsspellbooks.api.util.AnimationHolder;
 import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
+import io.redspace.ironsspellbooks.config.ServerConfigs;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.damage.SpellDamageSource;
 import io.redspace.ironsspellbooks.network.spell.ClientboundParticleShockwave;
@@ -193,7 +194,13 @@ public class IceAgeSpell extends AbstractSpell {
                     } else if (distance <= radius
                             && (blockState.getBlock() == Blocks.WATER || iceReplazableBlocks.contains(blockState.getBlock()))
                             && !isAboveCenter) {
-                        level.setBlockAndUpdate(currentPos, Blocks.ICE.defaultBlockState());
+                        if(iceReplazableBlocks.contains(blockState.getBlock())){
+                            if(ServerConfigs.SPELL_GREIFING.get()){
+                                level.setBlockAndUpdate(currentPos, Blocks.ICE.defaultBlockState());
+                            }
+                        } else {
+                            level.setBlockAndUpdate(currentPos, Blocks.ICE.defaultBlockState());
+                        }
                     } else if (distance <= radius && blockState.getBlock() == Blocks.LAVA && !isAboveCenter) {
                         level.setBlockAndUpdate(currentPos, Blocks.MAGMA_BLOCK.defaultBlockState());
                     }

@@ -117,6 +117,6 @@ public class MegidoSpell extends AbstractSpell {
     }
 
     public float getRange() {
-        return 10f;
+        return 15f;
     }
 }
