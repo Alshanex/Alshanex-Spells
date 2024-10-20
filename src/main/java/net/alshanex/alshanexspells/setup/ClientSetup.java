@@ -3,6 +3,7 @@ package net.alshanex.alshanexspells.setup;
 import net.alshanex.alshanexspells.AlshanexSpellsMod;
 import net.alshanex.alshanexspells.block.ModBlocks;
 import net.alshanex.alshanexspells.entity.ModEntities;
+import net.alshanex.alshanexspells.entity.custom.FlowerEntityRenderer;
 import net.alshanex.alshanexspells.entity.custom.FrozenEntityRenderer;
 import net.alshanex.alshanexspells.entity.custom.HikenEntityRenderer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -19,6 +20,7 @@ public class ClientSetup {
         event.registerEntityRenderer(ModEntities.HIKEN_ENTITY.get(), (context) -> new HikenEntityRenderer(context, 2f));
         event.registerEntityRenderer(ModEntities.HIBASHIRA_ENTITY.get(), (context) -> new HikenEntityRenderer(context, 5f));
         event.registerEntityRenderer(ModEntities.FROZEN_ENTITY.get(), FrozenEntityRenderer::new);
+        event.registerEntityRenderer(ModEntities.SPORE_BLOSSOM_ENTITY.get(), FlowerEntityRenderer::new);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.ICE_SURFACE_BLOCK.get(), RenderType.translucent());
     }
 }

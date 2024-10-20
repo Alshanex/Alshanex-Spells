@@ -1,6 +1,7 @@
 package net.alshanex.alshanexspells.entity;
 
 import net.alshanex.alshanexspells.AlshanexSpellsMod;
+import net.alshanex.alshanexspells.entity.custom.FlowerEntity;
 import net.alshanex.alshanexspells.entity.custom.FrozenEntity;
 import net.alshanex.alshanexspells.entity.custom.HibashiraEntity;
 import net.alshanex.alshanexspells.entity.custom.HikenEntity;
@@ -37,4 +38,10 @@ public class ModEntities {
                     .sized(.5f, .5f)
                     .clientTrackingRange(64)
                     .build(new ResourceLocation(AlshanexSpellsMod.MOD_ID, "frozen_entity").toString()));
+
+    public static final RegistryObject<EntityType<FlowerEntity>> SPORE_BLOSSOM_ENTITY =
+            ENTITY_TYPES.register("flower_entity", () -> EntityType.Builder.<FlowerEntity>of(FlowerEntity::new, MobCategory.MISC)
+                    .sized(1.25f, 1)
+                    .clientTrackingRange(64)
+                    .build(new ResourceLocation(AlshanexSpellsMod.MOD_ID, "flower_entity").toString()));
 }
