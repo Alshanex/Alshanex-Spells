@@ -14,6 +14,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -142,6 +143,22 @@ public class FlowerEntity  extends AbstractMagicProjectile {
         xOld = getX();
         yOld = getY();
         zOld = getZ();
+
+        if (airTime-- > 0) {
+            if (getTarget() != null) {
+                var target = getTarget();
+                if(target.isOnFire()){
+                    target.extinguishFire();
+                }
+                if(target instanceof LivingEntity livingEntity){
+                    for (MobEffectInstance effect : livingEntity.getActiveEffects()) {
+                        if (!effect.getEffect().isBeneficial()) {
+                            livingEntity.removeEffect(effect.getEffect());
+                        }
+                    }
+                }
+            }
+        }
 
         if (!level().isClientSide) {
             if (airTime <= 0) {

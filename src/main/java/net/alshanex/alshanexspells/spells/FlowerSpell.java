@@ -85,15 +85,24 @@ public class FlowerSpell extends AbstractSpell {
         if (playerMagicData.getAdditionalCastData() instanceof TargetEntityCastData castTargetingData) {
             LivingEntity target = castTargetingData.getTarget((ServerLevel) level);
             if (target != null) {
-                Vec3 spawn = new Vec3(target.position().x, target.position().y + target.getBbHeight(), target.position().z);
-                float healAmount = getSpellPower(spellLevel, entity);
+                Optional<FlowerEntity> existingFlower = target.getPassengers().stream()
+                        .filter(passenger -> passenger instanceof FlowerEntity)
+                        .map(passenger -> (FlowerEntity) passenger)
+                        .findFirst();
 
-                FlowerEntity flower = new FlowerEntity(level, entity, target, healAmount);
-                flower.moveTo(spawn);
-                flower.setAirTime(220);
-                target.unRide();
-                flower.startRiding(target);
-                level.addFreshEntity(flower);
+                if (existingFlower.isEmpty()) {
+                    Vec3 spawn = new Vec3(target.position().x, target.position().y + target.getBbHeight(), target.position().z);
+                    float healAmount = getSpellPower(spellLevel, entity);
+
+                    FlowerEntity flower = new FlowerEntity(level, entity, target, healAmount);
+                    flower.moveTo(spawn);
+                    flower.setAirTime(220);
+                    target.ejectPassengers();
+                    flower.startRiding(target);
+                    level.addFreshEntity(flower);
+                } else {
+                    existingFlower.get().setAirTime(220);
+                }
             }
         }
         super.onCast(level, spellLevel, entity, castSource, playerMagicData);
