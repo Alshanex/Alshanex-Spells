@@ -50,6 +50,8 @@ import static io.redspace.ironsspellbooks.api.util.Utils.random;
 
 @AutoSpellConfig
 public class IceAgeSpell extends AbstractSpell {
+    //Texture by Amadhe
+
     private final ResourceLocation spellId = new ResourceLocation(IronsSpellbooks.MODID, "ice_age");
 
     private int initialRadius = 0;

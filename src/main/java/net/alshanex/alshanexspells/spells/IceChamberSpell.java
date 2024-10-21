@@ -62,7 +62,7 @@ public class IceChamberSpell extends AbstractSpell {
         this.manaCostPerLevel = 15;
         this.baseSpellPower = 6;
         this.spellPowerPerLevel = 1;
-        this.castTime = 20;
+        this.castTime = 10;
         this.baseManaCost = 25;
     }
 

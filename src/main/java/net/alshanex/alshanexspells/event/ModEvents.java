@@ -35,8 +35,11 @@ public class ModEvents {
         public static void onProjectileImpact(ProjectileImpactEvent event) {
             if (event.getRayTraceResult() instanceof EntityHitResult entityHitResult) {
                 if (entityHitResult.getEntity() instanceof ServerPlayer player) {
-                    if (AUtils.hasItemInSpellbookSlot(player, ModItems.MERAMERA.get())) {
+                    MagicData magicData = MagicData.getPlayerMagicData(player);
+                    if (AUtils.hasItemInSpellbookSlot(player, ModItems.MERAMERA.get()) && magicData.getMana() >= 10) {
                         event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
+                        magicData.setMana(magicData.getMana() - 10);
+                        Messages.sendToPlayer(new ClientboundSyncMana(magicData), player);
                         if (player.level() instanceof ServerLevel serverLevel) {
 
                             Vec3 projectileDirection = event.getProjectile().getDeltaMovement().normalize();

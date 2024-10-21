@@ -45,7 +45,7 @@ public class HikenSpell extends AbstractSpell {
         this.manaCostPerLevel = 15;
         this.baseSpellPower = 1;
         this.spellPowerPerLevel = 1;
-        this.castTime = 20;
+        this.castTime = 10;
         this.baseManaCost = 60;
     }
 
