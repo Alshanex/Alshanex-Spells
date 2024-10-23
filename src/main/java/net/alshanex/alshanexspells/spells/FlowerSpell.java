@@ -31,6 +31,8 @@ import java.util.Optional;
 
 @AutoSpellConfig
 public class FlowerSpell extends AbstractSpell {
+    //Texture by hazentouvel.russeltouph
+
     private final ResourceLocation spellId = new ResourceLocation(IronsSpellbooks.MODID, "flower_spell");
 
     @Override

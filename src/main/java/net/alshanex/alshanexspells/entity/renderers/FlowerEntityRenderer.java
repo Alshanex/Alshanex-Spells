@@ -1,17 +1,15 @@
-package net.alshanex.alshanexspells.entity.custom;
+package net.alshanex.alshanexspells.entity.renderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.alshanex.alshanexspells.entity.custom.FlowerEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Blocks;
-import org.joml.Vector3f;
 
 public class FlowerEntityRenderer extends EntityRenderer<FlowerEntity> {
     private final BlockRenderDispatcher blockRenderer;

@@ -1,10 +1,7 @@
 package net.alshanex.alshanexspells.entity;
 
 import net.alshanex.alshanexspells.AlshanexSpellsMod;
-import net.alshanex.alshanexspells.entity.custom.FlowerEntity;
-import net.alshanex.alshanexspells.entity.custom.FrozenEntity;
-import net.alshanex.alshanexspells.entity.custom.HibashiraEntity;
-import net.alshanex.alshanexspells.entity.custom.HikenEntity;
+import net.alshanex.alshanexspells.entity.custom.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -44,4 +41,10 @@ public class ModEntities {
                     .sized(1.25f, 1)
                     .clientTrackingRange(64)
                     .build(new ResourceLocation(AlshanexSpellsMod.MOD_ID, "flower_entity").toString()));
+
+    public static final RegistryObject<EntityType<PawEntity>> PAW_ENTITY =
+            ENTITY_TYPES.register("paw_entity", () -> EntityType.Builder.<PawEntity>of(PawEntity::new, MobCategory.MISC)
+                    .sized(1.2f, 1.5f)
+                    .clientTrackingRange(64)
+                    .build(new ResourceLocation(AlshanexSpellsMod.MOD_ID, "paw_entity").toString()));
 }

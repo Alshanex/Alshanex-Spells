@@ -1,4 +1,4 @@
-package net.alshanex.alshanexspells.entity.custom;
+package net.alshanex.alshanexspells.entity.renderers;
 
 import net.alshanex.alshanexspells.AlshanexSpellsMod;
 import net.minecraft.client.renderer.entity.EntityRenderer;

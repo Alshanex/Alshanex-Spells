@@ -26,5 +26,6 @@ public class ExampleSpellRegistry {
     public static final RegistryObject<AbstractSpell> ICE_CHAMBER = registerSpell(new IceChamberSpell());
     public static final RegistryObject<AbstractSpell> MEGIDO = registerSpell(new MegidoSpell());
     public static final RegistryObject<AbstractSpell> FLOWER = registerSpell(new FlowerSpell());
+    public static final RegistryObject<AbstractSpell> PAW = registerSpell(new PawSpell());
 
 }

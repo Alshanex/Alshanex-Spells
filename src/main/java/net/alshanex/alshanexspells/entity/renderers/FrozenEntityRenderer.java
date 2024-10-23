@@ -1,8 +1,9 @@
-package net.alshanex.alshanexspells.entity.custom;
+package net.alshanex.alshanexspells.entity.renderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.alshanex.alshanexspells.AlshanexSpellsMod;
+import net.alshanex.alshanexspells.entity.custom.FrozenEntity;
 import net.alshanex.alshanexspells.util.FrozenEntityRenderType;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.ZombieModel;
