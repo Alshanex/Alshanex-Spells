@@ -107,14 +107,16 @@ public class PawSpell extends AbstractSpell {
 
                 paw1.setExplosionRadius(getRadius(spellLevel, entity));
 
-                paw1.setPos(spawn.x, spawn.y + target.getBbHeight() + (paw1.getBbHeight()/2) + .5f, spawn.z);
-                paw1.setDeltaMovement(0, .7, 0);
+                paw1.setPos(spawn.x, spawn.y + target.getBbHeight() * 3, spawn.z);
+                paw1.setDeltaMovement(0, -0.01, 0);
+
+                paw1.setRotation(entity.getXRot(), entity.getYRot());
 
                 level.addFreshEntity(paw1);
             }
         }
         if (spawn == null) {
-            spawn = Utils.raycastForEntity(level, entity, 1.3f, true).getLocation();
+            spawn = Utils.raycastForEntity(level, entity, 2f, true).getLocation();
 
             PawEntity paw2 = new PawEntity(level, entity, 0, null, getRadius(spellLevel,entity));
 
@@ -123,6 +125,8 @@ public class PawSpell extends AbstractSpell {
 
             paw2.setPos(spawn.x, spawn.y - (paw2.getBbHeight()/2),spawn.z);
             paw2.shoot(entity.getLookAngle());
+
+            paw2.setRotation(entity.getXRot(), entity.getYRot());
 
             level.addFreshEntity(paw2);
         }

@@ -44,7 +44,7 @@ public class ModEntities {
 
     public static final RegistryObject<EntityType<PawEntity>> PAW_ENTITY =
             ENTITY_TYPES.register("paw_entity", () -> EntityType.Builder.<PawEntity>of(PawEntity::new, MobCategory.MISC)
-                    .sized(1.2f, 1.5f)
+                    .sized(2f, 2f)
                     .clientTrackingRange(64)
                     .build(new ResourceLocation(AlshanexSpellsMod.MOD_ID, "paw_entity").toString()));
 }

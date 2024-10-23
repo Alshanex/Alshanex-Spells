@@ -93,6 +93,13 @@ public class PawEntity extends AbstractMagicProjectile implements GeoEntity {
         return pTarget != getOwner() && pTarget != getTarget() && super.canHitEntity(pTarget);
     }
 
+    public void setRotation(float x, float y) {
+        this.setXRot(x);
+        this.xRotO = x;
+        this.setYRot(y);
+        this.yRotO = y;
+    }
+
     @Override
     public void trailParticles() {
 
@@ -101,22 +108,6 @@ public class PawEntity extends AbstractMagicProjectile implements GeoEntity {
     @Override
     public void impactParticles(double x, double y, double z) {
 
-    }
-
-    @Override
-    public void tick() {
-        Vec3 deltaMovement = getDeltaMovement();
-        double distance = deltaMovement.horizontalDistance();
-
-        double x = deltaMovement.x;
-        double y = deltaMovement.y;
-        double z = deltaMovement.z;
-
-        setYRot((float) (Mth.atan2(x, z) * (180 / Math.PI)));
-        setXRot((float) (Mth.atan2(y, distance) * (180 / Math.PI)));
-        setXRot(lerpRotation(xRotO, getXRot()));
-        setYRot(lerpRotation(yRotO, getYRot()));
-        super.tick();
     }
 
     @Override
@@ -136,6 +127,7 @@ public class PawEntity extends AbstractMagicProjectile implements GeoEntity {
                 }
             }
 
+            impactParticles(xOld, yOld, zOld);
             float explosionRadius = this.radius;
             var explosionRadiusSqr = explosionRadius * explosionRadius;
             var entities = level().getEntities(this, this.getBoundingBox().inflate(explosionRadius));
@@ -148,8 +140,11 @@ public class PawEntity extends AbstractMagicProjectile implements GeoEntity {
                     DamageSources.applyDamage(entity, damage, ExampleSpellRegistry.PAW.get().getDamageSource(this, getOwner()));
                 }
             }
-            MagicManager.spawnParticles(level(), new BlastwaveParticleOptions(SchoolRegistry.EVOCATION.get().getTargetingColor(), radius), hitResult.getLocation().x, hitResult.getLocation().y + .165f, hitResult.getLocation().z, 1, 0, 0, 0, 0, true);
-            Messages.sendToPlayersTrackingEntity(new ClientboundParticleShockwave(new Vec3(hitResult.getLocation().x, hitResult.getLocation().y + .165f, hitResult.getLocation().z), explosionRadius, ParticleRegistry.SNOW_DUST.get()), getOwner(), true);
+            if(getColor() == 0){
+                MagicManager.spawnParticles(level(), new BlastwaveParticleOptions(SchoolRegistry.EVOCATION.get().getTargetingColor(), radius), hitResult.getLocation().x, hitResult.getLocation().y + .165f, hitResult.getLocation().z, 1, 0, 0, 0, 0, true);
+            } else {
+                MagicManager.spawnParticles(level(), new BlastwaveParticleOptions(SchoolRegistry.BLOOD.get().getTargetingColor(), radius), hitResult.getLocation().x, hitResult.getLocation().y + .165f, hitResult.getLocation().z, 1, 0, 0, 0, 0, true);
+            }
             playSound(SoundEvents.GENERIC_EXPLODE, 4.0F, (1.0F + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2F) * 0.7F);
             this.discard();
         }
